@@ -1,0 +1,35 @@
+@import "custom";
+@import "./partials/vars";
+
+@import "~bootstrap/scss/bootstrap-grid.scss";
+@import "~normalize.css/normalize.css";
+
+@import "./partials/avatar";
+@import "./partials/link";
+@import "./partials/load-button";
+@import "./partials/preloader";
+@import "./partials/user";
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.2;
+
+  padding: 10px 0;
+  background: rgba(#000, 0.05);
+
+  &.loading {
+    .lds-roller {
+      display: block;
+    }
+  }
+}
