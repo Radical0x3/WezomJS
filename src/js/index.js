@@ -9,12 +9,12 @@ if (process.env.NODE_ENV === "development") {
 }
 
 window.onload = function () {
-  const button = document.querySelector(".load-button");
+  const button = document.querySelector(".js-button");
   button.addEventListener("click", function () {
     const number = getRandomNumber(1, 100);
     const url = `https://randomuser.me/api/?results=${number}`;
     const body = document.querySelector("body");
-    const targetRow = document.querySelector(".row");
+    const targetRow = document.querySelector(".js-users-row");
     let result = "";
 
     this.classList.add("hiding");
@@ -46,30 +46,45 @@ window.onload = function () {
           }">${user.name.first} ${user.name.last}</a>
               <div class="user__gender">${user.gender}</div>
             </div>
+
             <div class="user__bottom">
-              <div class="user__item link">
-                <span class="link__desc">Phone number:</span>
-                <a class="link__body" href="tel:${user.cell.replace(
-                  /[()-\s]/g,
-                  ""
-                )}">${user.cell}</a>
+              <div class="user__item">
+                <div class="link">
+                  <span class="link__desc">Phone number:</span>
+                    <a class="link__body" href="tel:${user.cell.replace(
+                      /[()-\s]/g,
+                      ""
+                    )}">${user.cell}</a>
+                </div>
               </div>
-              <div class="user__item link">
-                <span class="link__desc">Email:</span>
-                <a class="link__body" href="mailto:${user.email}"
-                  >${user.email}</a
-                >
+
+              <div class="user__item">
+                <div class="link">
+                  <span class="link__desc">Email:</span>
+                    <a class="link__body" href="mailto:${user.email}"
+                      >${user.email}</a
+                    >
+                </div>
               </div>
-              <div class="user__item user__address">
-                Address: ${user.location.state} ${user.location.city} ${
-            user.location.street.name
-          } ${user.location.street.number}
+
+              <div class="user__item">
+                <div class="user__address">
+                  Address: ${user.location.state} ${user.location.city} ${
+                    user.location.street.name
+                  } ${user.location.street.number}
+                </div>
               </div>
-              <div class="user__item user__birthday">Birthday: ${
-                user.dob.date.split("T")[0]
-              }</div>
-              <div class="user__item user__reg-date">
-                Registration date: ${user.registered.date.split("T")[0]}
+              
+              <div class="user__item">
+                <div class="user__birthday">
+                  Birthday: ${user.dob.date.split("T")[0]}
+                </div>
+              </div>
+
+              <div class="user__item">
+                <div class="user__reg-date">
+                  Registration date: ${user.registered.date.split("T")[0]}
+                </div>
               </div>
             </div>
           </div>
@@ -80,7 +95,7 @@ window.onload = function () {
       })
       .then(() => {
         document
-          .querySelector(".js-load-button")
+          .querySelector(".js-button-container")
           .insertAdjacentHTML("beforebegin", result);
       })
       .catch((e) => console.log("Error: ", e.message))
