@@ -4531,9 +4531,9 @@ template {
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.25);
   position: relative; }
-  .avatar_rounded {
+  .avatar--rounded {
     border-radius: 50%; }
-    .avatar_rounded .avatar__img {
+    .avatar--rounded .avatar__img {
       border-radius: 50%; }
   .avatar-holder {
     padding-top: 100%; }

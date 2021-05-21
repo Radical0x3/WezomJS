@@ -28,5 +28,62 @@
         </div>
       </div>
     </div>
+
+    <template id="user-template">
+      <div class="col-xxl-2 col-lg-3 col-md-4 col-m-6 col-12 my-3 js-user-card">
+        <div class="user">
+          <div class="user__top">
+            <div class="avatar avatar--rounded">
+              <a href="/" class="avatar__link">
+                <div class="avatar-holder"></div>
+                <img src="{{picture}}" alt="user avatar" class="avatar__img" />
+              </a>
+            </div>
+            <a
+              href="/"
+              class="user__fullname"
+              title="{{name.first}} {{name.last}}"
+              >{{name.first}} {{name.last}}</a
+            >
+            <div class="user__gender">{{gender}}</div>
+          </div>
+
+          <div class="user__bottom">
+            <div class="user__item">
+              <div class="link">
+                <div class="link__desc">Phone number:</div>
+                <a class="link__body" href="tel:{{cell.edited}}"
+                  >{{cell.raw}}</a
+                >
+              </div>
+            </div>
+
+            <div class="user__item">
+              <div class="link">
+                <div class="link__desc">Email:</div>
+                <a class="link__body" href="mailto:{{email}}">{{email}}</a>
+              </div>
+            </div>
+
+            <div class="user__item">
+              <div class="user__address">
+                Address: {{location.state}} {{location.city}}
+                {{location.street.name}} {{location.street.number}}
+              </div>
+            </div>
+
+            <div class="user__item">
+              <div class="user__birthday">Birthday: {{dob}}</div>
+            </div>
+
+            <div class="user__item">
+              <div class="user__reg-date">
+                Registration date: {{registered}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
   </body>
 </html>
