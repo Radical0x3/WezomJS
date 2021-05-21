@@ -85,5 +85,33 @@
         </div>
       </div>
     </template>
+
+    <template id="statistic-template">
+      <div class="statistic">
+        <div class="statistic__item">
+          <span class="statistic__label">Total users: </span>
+          <span class="statistic__value">{{users.count}}</span>
+        </div>
+        <div class="statistic__item">
+          <span class="statistic__label">Males: </span>
+          <span class="statistic__value">{{users.male}}</span>
+        </div>
+        <div class="statistic__item">
+          <span class="statistic__label">Females: </span>
+          <span class="statistic__value">{{users.female}}</span>
+        </div>
+        <div class="statistic__item">
+          <span class="statistic__value">{{message}}</span>
+        </div>
+        <div class="statistic__item">
+          <span class="statistic__label">Users' nationalities: </span>
+          <div class="statistic__value">
+            {{#each nationalities}}
+            <p>{{@key}}: {{this}}</p>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </template>
   </body>
 </html>
