@@ -1,5 +1,5 @@
-function getUsersStatistic(users) {
-  const statisticContext = {
+function getUsersstatistics(users) {
+  const statisticsContext = {
     users: {
       count: 0,
       male: 0,
@@ -9,16 +9,16 @@ function getUsersStatistic(users) {
   };
 
   for (let user of users) {
-    statisticContext.users.count++;
-    statisticContext.users[`${user.gender}`]++;
-    if (!statisticContext.nationalities.hasOwnProperty(user.nat)) {
-      statisticContext.nationalities[`${user.nat}`] = 1;
+    statisticsContext.users.count++;
+    statisticsContext.users[`${user.gender}`]++;
+    if (!statisticsContext.nationalities.hasOwnProperty(user.nat)) {
+      statisticsContext.nationalities[`${user.nat}`] = 1;
     } else {
-      statisticContext.nationalities[`${user.nat}`]++;
+      statisticsContext.nationalities[`${user.nat}`]++;
     }
   }
 
-  return statisticContext;
+  return statisticsContext;
 }
 
-export default getUsersStatistic;
+export default getUsersstatistics;

@@ -1,0 +1,13 @@
+.nats-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px -5px;
+
+  &__item {
+    color: #fff;
+    background: $primary;
+    padding: 5px 15px;
+    margin: 5px;
+    border-radius: 10px;
+  }
+}

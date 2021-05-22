@@ -4,10 +4,6 @@ import getUserTemplateContext from "./getUserTemplateContext";
 function getUsersData(url, button) {
   const body = document.querySelector("body");
   let result = "";
-  let users = [];
-
-  const userSource = document.getElementById("user-template").innerHTML;
-  const userTemplate = Handlebars.compile(userSource);
 
   button.classList.add("hiding");
   body.classList.add("loading");
@@ -18,7 +14,9 @@ function getUsersData(url, button) {
     })
     .then((data) => {
       for (let user of data.results) {
-        let userItem = userTemplate(getUserTemplateContext(user));
+        let userItem = Handlebars.partials["User"](
+          getUserTemplateContext(user)
+        );
         result += userItem;
       }
 

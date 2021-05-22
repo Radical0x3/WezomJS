@@ -22,4 +22,22 @@ document.addEventListener("DOMContentLoaded", function () {
       setUsersStatistic(statistic);
     });
   });
+
+  // Register handlebars user's partial
+  const userSource = document.getElementById("user-template").innerHTML;
+  const userTemplate = Handlebars.compile(userSource);
+  Handlebars.registerPartial("User", userTemplate);
+
+  // Register handlebars statistics' partial
+  const statisticsSource = document.getElementById(
+    "statistics-template"
+  ).innerHTML;
+  const statisticsTemplate = Handlebars.compile(statisticsSource);
+  Handlebars.registerPartial("Statistics", statisticsTemplate);
+
+  // Register handlebars natsListItem's partial
+  const natsListItemSource =
+    document.getElementById("nats-list-item").innerHTML;
+  const natsListItemTemplate = Handlebars.compile(natsListItemSource);
+  Handlebars.registerPartial("NatsListItem", natsListItemTemplate);
 });
