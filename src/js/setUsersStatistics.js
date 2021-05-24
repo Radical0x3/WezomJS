@@ -13,7 +13,7 @@ function setUsersStatistics(statistics) {
 
   if (!statisticsNode) {
     document
-      .querySelector(".js-users-row")
+      .querySelector(".js-actions-row")
       .insertAdjacentHTML(
         "afterend",
         Handlebars.partials["Statistics"](statistics)

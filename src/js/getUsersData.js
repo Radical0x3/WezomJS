@@ -23,9 +23,19 @@ function getUsersData(url, button) {
       return data;
     })
     .then((data) => {
-      document
-        .querySelector(".js-button-container")
-        .insertAdjacentHTML("beforebegin", result);
+      let targetRow = document.querySelector(".js-users-row");
+
+      if (targetRow) {
+        targetRow.innerHTML = result;
+      } else {
+        const row = document.createElement("div");
+        row.classList.add("row", "js-users-row");
+        row.innerHTML = result;
+
+        document
+          .querySelector(".js-users-container")
+          .insertBefore(row, document.querySelector(".js-actions-row"));
+      }
 
       return data;
     })
