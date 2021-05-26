@@ -1,4 +1,4 @@
-function getUsersstatistics(users) {
+function getUsersStatistics(users) {
   const statistics = {
     users: {
       count: 0,
@@ -21,4 +21,4 @@ function getUsersstatistics(users) {
   return statistics;
 }
 
-export default getUsersstatistics;
+export default getUsersStatistics;

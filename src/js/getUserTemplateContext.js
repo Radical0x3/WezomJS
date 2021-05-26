@@ -21,6 +21,7 @@ function getUserTemplateContext(user) {
     },
     dob: new Date(user.dob.date).toLocaleDateString(),
     registered: new Date(user.registered.date).toLocaleDateString(),
+    nat: user.nat,
   };
 }
 

@@ -3,13 +3,17 @@
 
 @import "~bootstrap/scss/bootstrap-grid.scss";
 @import "~normalize.css/normalize.css";
+@import "~select2/dist/css/select2.min.css";
 
 @import "./partials/avatar";
 @import "./partials/block-title";
+@import "./partials/custom-select";
+@import "./partials/filters-form";
 @import "./partials/link";
 @import "./partials/load-button";
 @import "./partials/nats-list";
 @import "./partials/preloader";
+@import "./partials/search-failed";
 @import "./partials/statistics";
 @import "./partials/user";
 
@@ -34,5 +38,21 @@ body {
     .lds-roller {
       display: block;
     }
+  }
+}
+
+.reset-search {
+  padding: 6px 15px;
+  background: #fff;
+  border: 1px solid rgba(#000, 0.25);
+  border-radius: 5px;
+  color: $primary;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: $primary;
+    color: #fff;
+    border-color: $primary;
   }
 }

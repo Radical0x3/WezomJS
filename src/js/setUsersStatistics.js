@@ -1,7 +1,7 @@
 import Handlebars from "handlebars/dist/handlebars.min";
 import sortNationalitiesByFrequency from "./sortNationalitiesByFrequency";
 
-function setUsersStatistics(statistics) {
+function setUsersStatistics(statistics, show = true) {
   const statisticsNode = document.querySelector(".statistics");
   statistics.message =
     statistics.users.male == statistics.users.female
@@ -11,14 +11,14 @@ function setUsersStatistics(statistics) {
       : "Females > Males";
   statistics.nationalities = sortNationalitiesByFrequency(statistics);
 
-  if (!statisticsNode) {
+  if (!statisticsNode && document.querySelector(".js-users-row")) {
     document
       .querySelector(".js-actions-row")
       .insertAdjacentHTML(
         "afterend",
         Handlebars.partials["Statistics"](statistics)
       );
-  } else {
+  } else if (statisticsNode && document.querySelector(".js-users-row")) {
     let result = "";
     for (let nat of statistics.nationalities) {
       result += Handlebars.partials["NatsListItem"]({

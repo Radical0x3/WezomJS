@@ -41,6 +41,8 @@
   "dependencies": {
     "core-js": "^3.12.1",
     "handlebars": "^4.7.7",
-    "regenerator-runtime": "^0.13.7"
+    "jquery": "^3.6.0",
+    "regenerator-runtime": "^0.13.7",
+    "select2": "^4.1.0-rc.0"
   }
 }

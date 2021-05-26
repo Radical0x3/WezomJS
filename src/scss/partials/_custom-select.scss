@@ -1,0 +1,13 @@
+.custom-select {
+  display: flex;
+  align-items: center;
+
+  &__label {
+    color: $primary;
+    margin-right: 10px;
+  }
+
+  .select2 {
+    width: 100% !important;
+  }
+}

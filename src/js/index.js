@@ -1,11 +1,18 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import Handlebars from "handlebars/dist/handlebars.min";
+import $ from "jquery";
+import "select2/dist/js/select2.min";
 
+import disableSelectGroup from "./disableSelectGroup";
+import enableAllSelectGroup from "./enableAllSelectGroup";
+import getFilteredUsersStatistics from "./getFilteredUsersStatistics";
 import getRandomNumber from "./getRandomNumber";
 import getUsersData from "./getUsersData";
 import getUsersStatistics from "./getUsersStatistics";
+import resetUsersFilter from "./resetUsersFilter";
 import setUsersStatistics from "./setUsersStatistics";
+import usersFilter from "./usersFilter";
 
 import "../scss/style.scss";
 
@@ -15,13 +22,67 @@ if (process.env.NODE_ENV === "development") {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  const mySelect = $(".js-select");
+  const filterSelect = $(".js-filter-select");
+  const sortSelect = $(".js-sort-select");
+
+  filterSelect.select2();
+  sortSelect.select2({
+    placeholder: "Choose an option",
+  });
+
+  mySelect.on("select2:select", usersFilter);
+
+  sortSelect.on("select2:selecting", function (event, f, g) {
+    disableSelectGroup(event, this, true);
+  });
+
+  // Select2 Event handler for unselecting an item
+  sortSelect.on("select2:unselecting", function (event) {
+    disableSelectGroup(event, this, false);
+  });
+
+  sortSelect.on("change", function (event) {
+    event.ok ? enableAllSelectGroup(sortSelect) : null;
+  });
+
   document.querySelector(".js-button").addEventListener("click", function () {
     const url = `https://randomuser.me/api/?results=${getRandomNumber(1, 100)}`;
-    getUsersData(url, this).then((data) => {
-      const statistic = getUsersStatistics(data.results);
-      setUsersStatistics(statistic);
+    getUsersData(url, this)
+      .then((data) => {
+        const statistic = getUsersStatistics(data.results);
+        setUsersStatistics(statistic);
+      })
+      .then(() => document.querySelector(".filters-form").reset());
+  });
+
+  const form = document.querySelector(".filters-form");
+  form.addEventListener("keyup", (event) => {
+    usersFilter(event);
+
+    const statistics = getFilteredUsersStatistics();
+    setUsersStatistics(statistics);
+  });
+
+  form.addEventListener("search", () => {
+    resetUsersFilter();
+
+    const statistics = getFilteredUsersStatistics();
+    setUsersStatistics(statistics);
+  });
+
+  form.addEventListener("reset", () => {
+    resetUsersFilter();
+
+    const statistics = getFilteredUsersStatistics();
+    setUsersStatistics(statistics);
+    sortSelect.val(null).trigger({
+      type: "change",
+      ok: true,
     });
   });
+
+  form.addEventListener("submit", submit);
 
   // Register handlebars user's partial
   const userSource = document.getElementById("user-template").innerHTML;
@@ -40,4 +101,13 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("nats-list-item").innerHTML;
   const natsListItemTemplate = Handlebars.compile(natsListItemSource);
   Handlebars.registerPartial("NatsListItem", natsListItemTemplate);
+
+  // Register handlebars natsListItem's partial
+  const searchFailedSource = document.getElementById("search-failed").innerHTML;
+  const searchFailedTemplate = Handlebars.compile(searchFailedSource);
+  Handlebars.registerPartial("SearchFailed", searchFailedTemplate);
+
+  function submit(evt) {
+    evt.preventDefault();
+  }
 });

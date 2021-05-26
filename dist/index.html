@@ -6,9 +6,64 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/fonts.css" />
-  <link href="css/main.css" rel="stylesheet"></head>
+  <link href="css/vendors.css" rel="stylesheet"><link href="css/main.css" rel="stylesheet"></head>
   <body>
     <div class="container-fluid js-users-container">
+      <div class="row js-filters-row align-items-center">
+        <div class="col">
+          <form class="filters-form" action="#" id="filters-form">
+            <input
+              class="filters-form__search"
+              type="search"
+              name="filters-search"
+              placeholder="Search..."
+            />
+          </form>
+        </div>
+
+        <div class="col-2">
+          <div class="custom-select">
+            <span class="custom-select__label">Field:</span>
+            <select class="js-select js-filter-select" name="select">
+              <option value="fullName">Full Name</option>
+              <option value="mobile">Mobile</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="custom-select">
+            <span class="custom-select__label">Sort:</span>
+            <select class="js-select js-sort-select" name="sort[]" multiple>
+              <optgroup label="By full name">
+                <option value="fullName-asc" groupid="fullname">
+                  Full Name (A-Z)
+                </option>
+                <option value="fullname-desc" groupid="fullname">
+                  Full Name (Z-A)
+                </option>
+              </optgroup>
+
+              <optgroup label="By gender">
+                <option value="gender-asc" groupid="gender">
+                  Gender (A-Z)
+                </option>
+                <option value="gender-desc" groupid="gender">
+                  Gender (Z-A)
+                </option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-auto">
+          <button class="reset-search" type="reset" form="filters-form">
+            Reset
+          </button>
+        </div>
+      </div>
+
       <div class="row js-actions-row">
         <div class="col-12 js-button-container">
           <button class="load-button js-button">Load users</button>
@@ -41,10 +96,10 @@
             </div>
             <a
               href="/"
-              class="user__fullname"
+              class="user__fullname js-user-fullname"
               title="{{name.first}} {{name.last}}"
             >{{name.first}} {{name.last}}</a>
-            <div class="user__gender">{{gender}}</div>
+            <div class="user__gender js-user-gender">{{gender}}</div>
           </div>
 
           <div class="user__bottom">
@@ -52,7 +107,7 @@
               <div class="link">
                 <div class="link__desc">Phone number:</div>
                 <a
-                  class="link__body"
+                  class="link__body js-user-tel"
                   href="tel:{{cell.edited}}"
                 >{{cell.raw}}</a>
               </div>
@@ -61,7 +116,10 @@
             <div class="user__item">
               <div class="link">
                 <div class="link__desc">Email:</div>
-                <a class="link__body" href="mailto:{{email}}">{{email}}</a>
+                <a
+                  class="link__body js-user-email"
+                  href="mailto:{{email}}"
+                >{{email}}</a>
               </div>
             </div>
 
@@ -86,13 +144,15 @@
               </div>
             </div>
           </div>
+
+          <div class="user__nat js-user-nat" hidden>{{nat}}</div>
         </div>
       </div>
     </script>
 
     <script id="statistics-template" type="text/x-handlebars-template">
       <div class="row">
-        <div class="col-12">
+        <div class="col-12 js-statistics">
           <div class="statistics">
             <div class="block-title">User Statistics</div>
 
@@ -135,6 +195,12 @@
         <span class="nats-list__item-key">{{key}}</span>
         <span>:</span>
         <span class="nats-list__item-value">{{value}}</span>
+      </div>
+    </script>
+
+    <script id="search-failed" type="text/x-handlebars-template">
+      <div class="col-12 js-search-failed">
+        <div class="search-failed">Nothing matches your request...</div>
       </div>
     </script>
   <script defer src="vendors.bundle.js"></script><script defer src="main.bundle.js"></script></body>
