@@ -9,8 +9,15 @@
   </head>
   <body>
     <div class="container-fluid js-users-container">
-      <div class="row js-filters-row align-items-center">
-        <div class="col">
+      <div
+        class="
+          row
+          js-filters-row
+          align-items-center
+          justify-content-sm-start justify-content-center
+        "
+      >
+        <div class="col-lg col-12 mb-lg-0 mb-2">
           <form class="filters-form" action="#" id="filters-form">
             <input
               class="filters-form__search"
@@ -21,10 +28,9 @@
           </form>
         </div>
 
-        <div class="col-2">
+        <div class="col-lg-2 col-sm-3 col-4">
           <div class="custom-select">
-            <span class="custom-select__label">Field:</span>
-            <select class="js-select js-filter-select" name="select">
+            <select class="js-filter-select" name="select">
               <option value="fullName">Full Name</option>
               <option value="mobile">Mobile</option>
               <option value="email">Email</option>
@@ -32,32 +38,30 @@
           </div>
         </div>
 
-        <div class="col-3">
+        <div class="col-lg-3 col-sm col-8">
           <div class="custom-select">
             <span class="custom-select__label">Sort:</span>
-            <select class="js-select js-sort-select" name="sort[]" multiple>
-              <optgroup label="By full name">
-                <option value="fullName-asc" groupid="fullname">
-                  Full Name (A-Z)
-                </option>
-                <option value="fullname-desc" groupid="fullname">
-                  Full Name (Z-A)
-                </option>
-              </optgroup>
+            <select class="js-sort-select" name="sort[]" multiple>
+              <option value="fullname-asc" groupid="fullname" optindex="1">
+                Full Name (A-Z)
+              </option>
 
-              <optgroup label="By gender">
-                <option value="gender-asc" groupid="gender">
-                  Gender (A-Z)
-                </option>
-                <option value="gender-desc" groupid="gender">
-                  Gender (Z-A)
-                </option>
-              </optgroup>
+              <option value="fullname-desc" groupid="fullname" optindex="2">
+                Full Name (Z-A)
+              </option>
+
+              <option value="gender-asc" groupid="gender" optindex="3">
+                Gender (A-Z)
+              </option>
+
+              <option value="gender-desc" groupid="gender" optindex="4">
+                Gender (Z-A)
+              </option>
             </select>
           </div>
         </div>
 
-        <div class="col-auto">
+        <div class="col-sm-auto col-6 mt-sm-0 mt-2">
           <button class="reset-search" type="reset" form="filters-form">
             Reset
           </button>

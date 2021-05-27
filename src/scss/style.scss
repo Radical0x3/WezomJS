@@ -43,16 +43,19 @@ body {
 
 .reset-search {
   padding: 6px 15px;
-  background: #fff;
+  background: $hover;
   border: 1px solid rgba(#000, 0.25);
   border-radius: 5px;
-  color: $primary;
+  color: #fff;
   cursor: pointer;
   transition: 0.3s;
 
   &:hover {
     background: $primary;
-    color: #fff;
     border-color: $primary;
+  }
+
+  @media (max-width: 576px) {
+    width: 100%;
   }
 }

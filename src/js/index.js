@@ -10,8 +10,10 @@ import getFilteredUsersStatistics from "./getFilteredUsersStatistics";
 import getRandomNumber from "./getRandomNumber";
 import getUsersData from "./getUsersData";
 import getUsersStatistics from "./getUsersStatistics";
+import resetSortOptionsOrder from "./resetSortOptionsOrder";
 import resetUsersFilter from "./resetUsersFilter";
 import setUsersStatistics from "./setUsersStatistics";
+import sortUsers from "./sortUsers";
 import usersFilter from "./usersFilter";
 
 import "../scss/style.scss";
@@ -22,7 +24,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const mySelect = $(".js-select");
   const filterSelect = $(".js-filter-select");
   const sortSelect = $(".js-sort-select");
 
@@ -31,15 +32,34 @@ document.addEventListener("DOMContentLoaded", function () {
     placeholder: "Choose an option",
   });
 
-  mySelect.on("select2:select", usersFilter);
+  filterSelect.on("select2:select", usersFilter);
 
   sortSelect.on("select2:selecting", function (event, f, g) {
     disableSelectGroup(event, this, true);
   });
 
+  sortSelect.on("select2:select", function (event) {
+    const element = $(event.params.data.element);
+
+    element.detach();
+    $(this).append(element);
+    $(this).trigger("change");
+
+    sortUsers();
+  });
+
   // Select2 Event handler for unselecting an item
   sortSelect.on("select2:unselecting", function (event) {
     disableSelectGroup(event, this, false);
+  });
+
+  sortSelect.on("select2:unselect", function (event) {
+    resetSortOptionsOrder(event, this);
+
+    const target = $(event.target).select2("data");
+    if (target.length > 0) {
+      sortUsers();
+    }
   });
 
   sortSelect.on("change", function (event) {
@@ -69,6 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const statistics = getFilteredUsersStatistics();
     setUsersStatistics(statistics);
+
+    document.querySelector(".js-search-failed").remove();
   });
 
   form.addEventListener("reset", () => {
@@ -76,6 +98,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const statistics = getFilteredUsersStatistics();
     setUsersStatistics(statistics);
+
+    const searchFailed = document.querySelector(".js-search-failed");
+    searchFailed ? searchFailed.remove : null;
+
     sortSelect.val(null).trigger({
       type: "change",
       ok: true,
@@ -107,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const searchFailedTemplate = Handlebars.compile(searchFailedSource);
   Handlebars.registerPartial("SearchFailed", searchFailedTemplate);
 
-  function submit(evt) {
-    evt.preventDefault();
+  function submit(event) {
+    event.preventDefault();
   }
 });

@@ -8,7 +8,7 @@ function disableSelectGroup(event, target, disabled) {
   $.each(optionsList, function (idx, item) {
     const itemGroupId = $(item).attr("groupid");
 
-    if (itemGroupId == group) {
+    if (itemGroupId == group && $(item).val() !== selId) {
       $(item).attr("disabled", disabled);
     }
   });
