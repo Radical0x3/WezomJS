@@ -8,7 +8,8 @@ function resetUsersFilter() {
     .val($(".js-filter-select option:eq(0)").val())
     .trigger("change");
 
-  document.querySelector(".js-statistics").classList.remove("d-none");
+  const statisticsBlock = document.querySelector(".js-statistics");
+  statisticsBlock ? statisticsBlock.classList.remove("d-none") : null;
 }
 
 export default resetUsersFilter;

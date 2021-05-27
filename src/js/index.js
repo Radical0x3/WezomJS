@@ -79,10 +79,13 @@ document.addEventListener("DOMContentLoaded", function () {
           sortUsers();
         }
       })
-      .then(() => document.querySelector(".filters-form").reset());
+      .then(() => {
+        document.querySelector(".js-search-input").value = null;
+        document.querySelector(".js-statistics").classList.remove("d-none");
+      });
   });
 
-  const form = document.querySelector(".filters-form");
+  const form = document.querySelector(".js-filters-form");
   form.addEventListener("keyup", (event) => {
     usersFilter(event);
 
@@ -96,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const statistics = getFilteredUsersStatistics();
     setUsersStatistics(statistics);
 
-    document.querySelector(".js-search-failed").remove();
+    const searchFailed = document.querySelector(".js-search-failed");
+    searchFailed ? searchFailed.remove() : null;
   });
 
   form.addEventListener("reset", () => {
@@ -108,10 +112,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchFailed = document.querySelector(".js-search-failed");
     searchFailed ? searchFailed.remove : null;
 
-    // sortSelect.val(null).trigger({
-    //   type: "change",
-    //   ok: true,
-    // });
+    sortSelect.val(null).trigger({
+      type: "change",
+      ok: true,
+    });
   });
 
   form.addEventListener("submit", submit);
