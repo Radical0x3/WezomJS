@@ -73,6 +73,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const statistic = getUsersStatistics(data.results);
         setUsersStatistics(statistic);
       })
+      .then(() => {
+        const target = $(".js-sort-select").select2("data");
+        if (target.length > 0) {
+          sortUsers();
+        }
+      })
       .then(() => document.querySelector(".filters-form").reset());
   });
 
@@ -102,10 +108,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchFailed = document.querySelector(".js-search-failed");
     searchFailed ? searchFailed.remove : null;
 
-    sortSelect.val(null).trigger({
-      type: "change",
-      ok: true,
-    });
+    // sortSelect.val(null).trigger({
+    //   type: "change",
+    //   ok: true,
+    // });
   });
 
   form.addEventListener("submit", submit);
