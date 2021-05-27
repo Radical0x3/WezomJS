@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setUsersStatistics(statistics);
 
     const searchFailed = document.querySelector(".js-search-failed");
-    searchFailed ? searchFailed.remove : null;
+    searchFailed ? searchFailed.remove() : null;
 
     sortSelect.val(null).trigger({
       type: "change",
