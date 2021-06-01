@@ -4,7 +4,7 @@ import sortNationalitiesByFrequency from "./sortNationalitiesByFrequency";
 function setUsersStatistics(statistics, show = true) {
   const statisticsNode = document.querySelector(".statistics");
   statistics.message =
-    statistics.users.male == statistics.users.female
+    statistics.users.male === statistics.users.female
       ? "Males == Females"
       : statistics.users.male > statistics.users.female
       ? "Males > Females"

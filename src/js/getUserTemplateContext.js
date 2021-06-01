@@ -1,3 +1,5 @@
+import getUsersOperatorCode from "./getUsersOperatorCode";
+
 function getUserTemplateContext(user) {
   return {
     picture: user.picture.large,
@@ -8,7 +10,8 @@ function getUserTemplateContext(user) {
     gender: user.gender,
     cell: {
       raw: user.cell,
-      edited: user.cell.replace(/[()-\s]/g, ""),
+      edited: user.cell.replace(/[-()\s]/g, ""),
+      code: getUsersOperatorCode(user.cell)
     },
     email: user.email,
     location: {
@@ -21,6 +24,7 @@ function getUserTemplateContext(user) {
     },
     dob: new Date(user.dob.date).toLocaleDateString(),
     registered: new Date(user.registered.date).toLocaleDateString(),
+    age: user.dob.age,
     nat: user.nat,
   };
 }

@@ -1,0 +1,75 @@
+.checkbox {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+  cursor: pointer;
+  
+  &.disabled {
+    cursor: not-allowed;
+  }
+  
+  &:not(:last-child) {
+    margin-bottom: 5px;
+  }
+  
+  &__input {
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    clip: rect(0 0 0 0);
+    
+    &:checked + .checkbox__style {
+      border-color: $green;
+      background: $green;
+      
+      &::before {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    
+    &:disabled + .checkbox__style {
+      border-color: #ccc;
+    }
+    
+    &:checked:disabled + .checkbox__style {
+      &::before {
+        color: #ccc;
+      }
+    }
+  }
+  
+  &__style {
+    width: 20px;
+    height: 20px;
+    border: 1px solid $green;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    transition: 0.3s;
+    
+    &::before {
+      content: "";
+      display: block;
+      width: 14px;
+      height: 11px;
+      background: url('data:image/svg+xml;utf-8,<svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.07291 9.87715L13.2745 0.875L14.3573 1.86148L5.14809 11.9696L0.127686 7.19706L1.13705 6.13539L5.07291 9.87715Z" fill="white"/></svg>');
+      background-size: cover;
+      
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+  }
+  
+  &__text {
+    color: $primary;
+  }
+}

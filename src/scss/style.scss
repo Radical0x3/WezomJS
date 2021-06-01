@@ -7,13 +7,16 @@
 
 @import "./partials/avatar";
 @import "./partials/block-title";
+@import "./partials/checkbox";
 @import "./partials/custom-select";
+@import "./partials/filters";
 @import "./partials/filters-form";
 @import "./partials/link";
 @import "./partials/load-button";
 @import "./partials/nats-list";
 @import "./partials/preloader";
 @import "./partials/search-failed";
+@import "./partials/search-form";
 @import "./partials/statistics";
 @import "./partials/user";
 
@@ -27,13 +30,13 @@
 
 body {
   font-family: "Roboto", -apple-system, system-ui, BlinkMacSystemFont,
-    "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol";
+  "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol";
   line-height: 1.2;
-
+  
   padding: 10px 0;
   background: rgba(#000, 0.05);
-
+  
   &.loading {
     .lds-roller {
       display: block;
@@ -41,20 +44,24 @@ body {
   }
 }
 
-.reset-search {
+.button-reset {
   padding: 6px 15px;
-  background: $hover;
-  border: 1px solid rgba(#000, 0.25);
+  background: $green;
+  border: 1px solid $green;
   border-radius: 5px;
   color: #fff;
   cursor: pointer;
   transition: 0.3s;
-
+  
   &:hover {
     background: $primary;
     border-color: $primary;
   }
-
+  
+  &--wide {
+    width: 100%;
+  }
+  
   @media (max-width: 576px) {
     width: 100%;
   }

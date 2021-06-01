@@ -1,211 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Webpack Test</title>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/fonts.css" />
-  <link href="css/vendors.css" rel="stylesheet"><link href="css/main.css" rel="stylesheet"></head>
-  <body>
-    <div class="container-fluid js-users-container">
-      <div
-        class="
-          row
-          js-filters-row
-          align-items-center
-          justify-content-sm-start justify-content-center
-        "
-      >
-        <div class="col-lg col-12 mb-lg-0 mb-2">
-          <form class="filters-form js-filters-form" action="#" id="filters-form">
-            <input
-              class="filters-form__search js-search-input"
-              type="search"
-              name="filters-search"
-              placeholder="Search..."
-            />
-          </form>
-        </div>
+<head>
+  <title>JS Tasks</title>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="css/fonts.css"/>
+<link href="css/vendors.css" rel="stylesheet"><link href="css/main.css" rel="stylesheet"></head>
 
-        <div class="col-lg-2 col-sm-3 col-4">
-          <div class="custom-select">
-            <select class="js-filter-select" name="select">
-              <option value="fullName">Full Name</option>
-              <option value="mobile">Mobile</option>
-              <option value="email">Email</option>
-            </select>
+<body>
+<div class="container-fluid js-users-container">
+  <div class="row js-search-row align-items-center justify-content-sm-start justify-content-center">
+    <div class="col-lg col-12 mb-lg-0 mb-2">
+      <form class="search-form js-search-form" action="#" id="search-form">
+        <input class="search-form__search js-search-input" type="search" name="search-input"
+               placeholder="Search..."/>
+      </form>
+    </div>
+    
+    <div class="col-lg-2 col-sm-3 col-4">
+      <div class="custom-select">
+        <select class="js-search-select" name="select">
+          <option value="fullName">Full Name</option>
+          <option value="mobile">Mobile</option>
+          <option value="email">Email</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="col-lg-3 col-sm col-8">
+      <div class="custom-select">
+        <span class="custom-select__label">Sort:</span>
+        <select class="js-sort-select" name="sort[]" multiple>
+          <option value="fullname-asc" data-groupid="fullname" data-optindex="1">
+            Full Name (A-Z)
+          </option>
+          
+          <option value="fullname-desc" data-groupid="fullname" data-optindex="2">
+            Full Name (Z-A)
+          </option>
+          
+          <option value="gender-asc" data-groupid="gender" data-optindex="3">
+            Gender (A-Z)
+          </option>
+          
+          <option value="gender-desc" data-groupid="gender" data-optindex="4">
+            Gender (Z-A)
+          </option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="col-sm-auto col-6 mt-sm-0 mt-2">
+      <button class="button-reset" type="reset" form="search-form">
+        Reset
+      </button>
+    </div>
+  </div>
+  
+  <div class="row js-actions-row">
+    <div class="col-12 js-button-container">
+      <button class="load-button js-button">Load users</button>
+    </div>
+    
+    <div class="col-12">
+      <div class="lds-roller mb-3">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="user-template" type="text/x-handlebars-template">
+  <div class="col-xxl-2 col-lg-3 col-md-4 col-m-6 col-12 my-3 js-user-card">
+    <div class="user">
+      <div class="user__top">
+        <div class="avatar avatar--rounded">
+          <a href="/" class="avatar__link">
+            <div class="avatar-holder"></div>
+            <img width="200" height="200" src="{{picture}}" alt="user avatar" class="avatar__img"/>
+          </a>
+        </div>
+        <a href="/" class="user__fullname js-user-fullname"
+           title="{{name.first}} {{name.last}}">{{name.first}} {{name.last}}
+        </a>
+        <div class="user__gender js-user-gender">{{gender}}</div>
+      </div>
+      
+      <div class="user__bottom">
+        <div class="user__item">
+          <div class="link">
+            <div class="link__desc">Phone number:</div>
+            <a class="link__body js-user-tel" href="tel:{{cell.edited}}">
+              {{cell.raw}}
+            </a>
           </div>
         </div>
-
-        <div class="col-lg-3 col-sm col-8">
-          <div class="custom-select">
-            <span class="custom-select__label">Sort:</span>
-            <select class="js-sort-select" name="sort[]" multiple>
-              <option value="fullname-asc" groupid="fullname" optindex="1">
-                Full Name (A-Z)
-              </option>
-
-              <option value="fullname-desc" groupid="fullname" optindex="2">
-                Full Name (Z-A)
-              </option>
-
-              <option value="gender-asc" groupid="gender" optindex="3">
-                Gender (A-Z)
-              </option>
-
-              <option value="gender-desc" groupid="gender" optindex="4">
-                Gender (Z-A)
-              </option>
-            </select>
+        
+        <div class="user__item">
+          <div class="link">
+            <div class="link__desc">Email:</div>
+            <a class="link__body js-user-email" href="mailto:{{email}}">
+              {{email}}
+            </a>
           </div>
         </div>
-
-        <div class="col-sm-auto col-6 mt-sm-0 mt-2">
-          <button class="reset-search" type="reset" form="filters-form">
-            Reset
-          </button>
+        
+        <div class="user__item">
+          <div class="user__address">
+            Address:
+            {{location.state}}
+            {{location.city}}
+            {{location.street.name}}
+            {{location.street.number}}
+          </div>
+        </div>
+        
+        <div class="user__item">
+          <div class="user__birthday">Birthday: {{dob}}</div>
+        </div>
+        
+        <div class="user__item">
+          <div class="user__reg-date">
+            Registration date:
+            {{registered}}
+          </div>
         </div>
       </div>
+      
+      <div class="user__nat js-user-nat" hidden>{{nat}}</div>
+      <div class="user__age js-user-age" hidden>{{age}}</div>
+      <div class="user__code js-user-code" hidden>{{cell.code}}</div>
+    </div>
+  </div>
+</script>
 
-      <div class="row js-actions-row">
-        <div class="col-12 js-button-container">
-          <button class="load-button js-button">Load users</button>
+<script id="filters-template" type="text/x-handlebars-template">
+  <aside class="filters">
+    <form action="#" class="filters-form js-filters-form" id="filters-form">
+      <fieldset class="filters-form__fieldset" data-field="gender">
+        <legend class="filters-form__legend">Gender</legend>
+        
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" value="male"/>
+          <span class="checkbox__style"></span>
+          <span class="checkbox__text">Male</span>
+        </label>
+        
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" value="female"/>
+          <span class="checkbox__style"></span>
+          <span class="checkbox__text">Female</span>
+        </label>
+      </fieldset>
+      
+      <fieldset class="filters-form__fieldset" data-field="age">
+        <legend class="filters-form__legend">Age</legend>
+        
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" value="under, 35"/>
+          <span class="checkbox__style"></span>
+          <span class="checkbox__text">Under 35</span>
+        </label>
+        
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" value="35, 40"/>
+          <span class="checkbox__style"></span>
+          <span class="checkbox__text">From 35 to 40</span>
+        </label>
+        
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" value="40, 45"/>
+          <span class="checkbox__style"></span>
+          <span class="checkbox__text">From 40 to 45</span>
+        </label>
+        
+        <label class="checkbox">
+          <input type="checkbox" class="checkbox__input" value="over, 45"/>
+          <span class="checkbox__style"></span>
+          <span class="checkbox__text">Over 45</span>
+        </label>
+      </fieldset>
+      
+      <fieldset class="filters-form__fieldset" data-field="code">
+        <legend class="filters-form__legend">Operator's code</legend>
+        
+        <select class="filters-form__operators js-operators-select" name="operators[]" multiple></select>
+      </fieldset>
+      
+      <button class="button-reset button-reset--wide" type="reset">
+        Reset
+      </button>
+    </form>
+  </aside>
+</script>
+
+<script id="statistics-template" type="text/x-handlebars-template">
+  <div class="row">
+    <div class="col-12 js-statistics">
+      <div class="statistics">
+        <div class="block-title">User Statistics</div>
+        
+        <div class="statistics__item">
+          <div class="statistics__label">Total users:</div>
+          <div class="statistics__value">{{users.count}}</div>
         </div>
-
-        <div class="col-12">
-          <div class="lds-roller mb-3">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+        
+        <div class="statistics__item">
+          <div class="statistics__label">Males:</div>
+          <div class="statistics__value">{{users.male}}</div>
+        </div>
+        
+        <div class="statistics__item">
+          <div class="statistics__label">Females:</div>
+          <div class="statistics__value">{{users.female}}</div>
+        </div>
+        
+        <div class="statistics__item">
+          <div class="statistics__label">{{message}}</div>
+        </div>
+        
+        <div class="statistics__item">
+          <div class="statistics__label">Users' nationalities:</div>
+          <div class="statistics__value">
+            <div class="nats-list">
+              {{#each nationalities}}
+                {{> NatsListItem key=this.key value=this.value}}
+              {{/each}}
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</script>
 
-    <script id="user-template" type="text/x-handlebars-template">
-      <div class="col-xxl-2 col-lg-3 col-md-4 col-m-6 col-12 my-3 js-user-card">
-        <div class="user">
-          <div class="user__top">
-            <div class="avatar avatar--rounded">
-              <a href="/" class="avatar__link">
-                <div class="avatar-holder"></div>
-                <img src="{{picture}}" alt="user avatar" class="avatar__img" />
-              </a>
-            </div>
-            <a
-              href="/"
-              class="user__fullname js-user-fullname"
-              title="{{name.first}} {{name.last}}"
-            >{{name.first}} {{name.last}}</a>
-            <div class="user__gender js-user-gender">{{gender}}</div>
-          </div>
+<script id="nats-list-item-template" type="text/x-handlebars-template">
+  <div class="nats-list__item">
+    <span class="nats-list__item-key">{{key}}</span>
+    <span>:</span>
+    <span class="nats-list__item-value">{{value}}</span>
+  </div>
+</script>
 
-          <div class="user__bottom">
-            <div class="user__item">
-              <div class="link">
-                <div class="link__desc">Phone number:</div>
-                <a
-                  class="link__body js-user-tel"
-                  href="tel:{{cell.edited}}"
-                >{{cell.raw}}</a>
-              </div>
-            </div>
-
-            <div class="user__item">
-              <div class="link">
-                <div class="link__desc">Email:</div>
-                <a
-                  class="link__body js-user-email"
-                  href="mailto:{{email}}"
-                >{{email}}</a>
-              </div>
-            </div>
-
-            <div class="user__item">
-              <div class="user__address">
-                Address:
-                {{location.state}}
-                {{location.city}}
-                {{location.street.name}}
-                {{location.street.number}}
-              </div>
-            </div>
-
-            <div class="user__item">
-              <div class="user__birthday">Birthday: {{dob}}</div>
-            </div>
-
-            <div class="user__item">
-              <div class="user__reg-date">
-                Registration date:
-                {{registered}}
-              </div>
-            </div>
-          </div>
-
-          <div class="user__nat js-user-nat" hidden>{{nat}}</div>
-        </div>
-      </div>
-    </script>
-
-    <script id="statistics-template" type="text/x-handlebars-template">
-      <div class="row">
-        <div class="col-12 js-statistics">
-          <div class="statistics">
-            <div class="block-title">User Statistics</div>
-
-            <div class="statistics__item">
-              <div class="statistics__label">Total users:</div>
-              <div class="statistics__value">{{users.count}}</div>
-            </div>
-
-            <div class="statistics__item">
-              <div class="statistics__label">Males:</div>
-              <div class="statistics__value">{{users.male}}</div>
-            </div>
-
-            <div class="statistics__item">
-              <div class="statistics__label">Females:</div>
-              <div class="statistics__value">{{users.female}}</div>
-            </div>
-
-            <div class="statistics__item">
-              <div class="statistics__label">{{message}}</div>
-            </div>
-
-            <div class="statistics__item">
-              <div class="statistics__label">Users' nationalities:</div>
-              <div class="statistics__value">
-                <div class="nats-list">
-                  {{#each nationalities}}
-                    {{> NatsListItem key=this.key value=this.value}}
-                  {{/each}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </script>
-
-    <script id="nats-list-item" type="text/x-handlebars-template">
-      <div class="nats-list__item">
-        <span class="nats-list__item-key">{{key}}</span>
-        <span>:</span>
-        <span class="nats-list__item-value">{{value}}</span>
-      </div>
-    </script>
-
-    <script id="search-failed" type="text/x-handlebars-template">
-      <div class="col-12 js-search-failed">
-        <div class="search-failed">Nothing matches your request...</div>
-      </div>
-    </script>
-  <script defer src="vendors.bundle.js"></script><script defer src="main.bundle.js"></script></body>
+<script id="search-failed-template" type="text/x-handlebars-template">
+  <div class="col-12 js-search-failed">
+    <div class="search-failed">Nothing matches your request...</div>
+  </div>
+</script>
+<script defer src="vendors.bundle.js"></script><script defer src="main.bundle.js"></script></body>
 </html>

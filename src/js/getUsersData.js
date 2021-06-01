@@ -4,10 +4,10 @@ import getUserTemplateContext from "./getUserTemplateContext";
 function getUsersData(url, button) {
   const body = document.querySelector("body");
   let result = "";
-
+  
   button.classList.add("hiding");
   body.classList.add("loading");
-
+  
   const usersData = fetch(url)
     .then((response) => {
       return response.ok ? response.json() : Promise.reject(response);
@@ -19,24 +19,33 @@ function getUsersData(url, button) {
         );
         result += userItem;
       }
-
+      
       return data;
     })
     .then((data) => {
       let targetRow = document.querySelector(".js-users-row");
-
+      
       if (targetRow) {
         targetRow.innerHTML = result;
       } else {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("row", "js-main-content");
+        
+        const col = document.createElement("div");
+        col.classList.add("col", "js-users-col");
+        
         const row = document.createElement("div");
         row.classList.add("row", "js-users-row");
         row.innerHTML = result;
-
+        
+        col.append(row);
+        wrapper.append(col);
+        
         document
           .querySelector(".js-users-container")
-          .insertBefore(row, document.querySelector(".js-actions-row"));
+          .insertBefore(wrapper, document.querySelector(".js-actions-row"));
       }
-
+      
       return data;
     })
     .catch((e) => console.log("Error: ", e.message))
@@ -47,7 +56,7 @@ function getUsersData(url, button) {
     .then((data) => {
       return data;
     });
-
+  
   return new Promise(function (resolve) {
     resolve(usersData);
   });

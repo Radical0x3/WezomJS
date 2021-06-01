@@ -19,10 +19,10 @@ function sortUsers() {
         .querySelector(`.user__${type}`)
         .textContent.toUpperCase();
 
-      if (order == "asc") {
+      if (order === "asc") {
         if (currNode === nextNode) continue;
         return currNode > nextNode ? 1 : -1;
-      } else if (order == "desc") {
+      } else if (order === "desc") {
         if (currNode === nextNode) continue;
         return currNode < nextNode ? 1 : -1;
       }

@@ -8,7 +8,7 @@ function getFilteredUsersStatistics() {
     nationalities: {},
   };
 
-  let cards = document.querySelectorAll(".js-user-card:not(.d-none)");
+  let cards = document.querySelectorAll(".js-user-card:not(.js-hidden-by-filter)");
   cards.forEach((item) => {
     const userNat = item.querySelector(".js-user-nat").textContent;
     statistics.users.count++;
