@@ -27,3 +27,8 @@ Handlebars.registerPartial("SearchFailed", searchFailedTemplate);
 const filtersSource = document.getElementById("filters-template").innerHTML;
 const filtersTemplate = Handlebars.compile(filtersSource);
 Handlebars.registerPartial("Filters", filtersTemplate);
+
+// Register handlebars searchFailed partial
+const paginationSource = document.getElementById("pagination-template").innerHTML;
+const paginationTemplate = Handlebars.compile(paginationSource);
+Handlebars.registerPartial("Pagination", paginationTemplate);

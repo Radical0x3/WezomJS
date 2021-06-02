@@ -1,0 +1,54 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  
+  color: $primary;
+  font-weight: 700;
+  
+  cursor: pointer;
+  transition: 0.3s;
+  
+  &:hover {
+    background: #f2f2f2;
+    border-color: $primary;
+  }
+  
+  &--open-popup {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  &--reset {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  &--load {
+    margin: 20px auto 36px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 24px;
+  }
+  
+  &--hiding {
+    display: none;
+  }
+  
+  &--wide {
+    width: 100%;
+  }
+  
+  &__icon {
+    width: 16px;
+    height: 16px;
+    fill: $primary;
+    margin-left: 10px;
+  }
+}

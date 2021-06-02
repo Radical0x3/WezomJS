@@ -1,11 +1,12 @@
 import Handlebars from "handlebars/dist/handlebars.min";
 import getUserTemplateContext from "./getUserTemplateContext";
 
-function getUsersData(url, button) {
+function getUsersData(url) {
   const body = document.querySelector("body");
+  const button = document.querySelector(".js-button");
   let result = "";
   
-  button.classList.add("hiding");
+  button.classList.add("button--hiding");
   body.classList.add("loading");
   
   const usersData = fetch(url)
@@ -50,7 +51,7 @@ function getUsersData(url, button) {
     })
     .catch((e) => console.log("Error: ", e.message))
     .finally(() => {
-      button.classList.remove("hiding");
+      button.classList.remove("button--hiding");
       body.classList.remove("loading");
     })
     .then((data) => {

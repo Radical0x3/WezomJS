@@ -7,13 +7,15 @@
 
 @import "./partials/avatar";
 @import "./partials/block-title";
-@import "./partials/checkbox";
+@import "./partials/button";
+@import "partials/checkbox";
 @import "./partials/custom-select";
 @import "./partials/filters";
 @import "./partials/filters-form";
 @import "./partials/link";
-@import "./partials/load-button";
 @import "./partials/nats-list";
+@import "partials/pagination";
+@import "partials/popup";
 @import "./partials/preloader";
 @import "./partials/search-failed";
 @import "./partials/search-form";
@@ -36,33 +38,17 @@ body {
   
   padding: 10px 0;
   background: rgba(#000, 0.05);
+  min-width: 320px;
   
   &.loading {
     .lds-roller {
       display: block;
     }
   }
+  
+  &.lock {
+    overflow: hidden;
+  }
 }
 
-.button-reset {
-  padding: 6px 15px;
-  background: $green;
-  border: 1px solid $green;
-  border-radius: 5px;
-  color: #fff;
-  cursor: pointer;
-  transition: 0.3s;
-  
-  &:hover {
-    background: $primary;
-    border-color: $primary;
-  }
-  
-  &--wide {
-    width: 100%;
-  }
-  
-  @media (max-width: 576px) {
-    width: 100%;
-  }
-}
+

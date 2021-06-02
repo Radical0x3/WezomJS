@@ -1,6 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import $ from "jquery";
+import Handlebars from "handlebars/dist/handlebars.min";
 import "select2/dist/js/select2.min";
 
 import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
@@ -25,6 +26,12 @@ import usersSearch from "./usersSearch";
 import "./registerHandebarsParts";
 
 import "../scss/style.scss";
+import {closePopup, openPopup} from "./popup";
+import moveFiltersNode from "./moveFiltersNode";
+import getUserTemplateContext from "./getUserTemplateContext";
+import setPagination from "./setPagination";
+import createPagination from "./createPagination";
+import getSeed from "./getSeed";
 
 // HTML HOT MODULE REPLACEMENT WHEN IT'S DEVELOPMENT MODE <--------------------
 if (process.env.NODE_ENV === "development") {
@@ -33,30 +40,52 @@ if (process.env.NODE_ENV === "development") {
 
 document.addEventListener("DOMContentLoaded", function () {
   let filterOpts = {};
+  let seed = "";
+  let usersCount = 0;
+  let usersOnPage = 0;
+  let pagesCount = 0;
   
   const searchSelect = $(".js-search-select");
   const sortSelect = $(".js-sort-select");
+  const usersToShowSelect = $(".js-users-to-show");
   
   // INITIALIZE SELECT2 PLUGIN'S INSTANCES <--------------------
-  searchSelect.select2();
+  searchSelect.select2({
+    placeholder: "Search by field",
+  });
   sortSelect.select2({
-    placeholder: "Choose an option",
+    placeholder: "Sort option",
+  });
+  usersToShowSelect.select2();
+  
+  document.querySelector(".js-open-filters").addEventListener("click", function () {
+    openPopup(1);
   });
   
   // LOAD USERS FROM RANDOMUSER.ME <--------------------
   document.querySelector(".js-button").addEventListener("click", function () {
     const url = `https://randomuser.me/api/?results=${getRandomNumber(1, 100)}`;
-    getUsersData(url, this)
+    getSeed(url).then(data => {
+      seed = data.seed;
+      usersCount = data.results;
+      usersOnPage = $(".js-users-to-show").val();
+      pagesCount = Math.ceil(usersCount / usersOnPage);
+      console.log(usersCount);
+      
+      return `https://randomuser.me/api/?page=1&results=${1 === pagesCount ? usersCount % usersOnPage : usersOnPage}&seed=${seed}`;
+    }).then((dataUrl) => getUsersData(dataUrl))
       .then((data) => {
         Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
         getNewStatistics();
+        $(".js-search-row").removeClass("d-none");
       })
       .then(() => {
         setUsersFilters();
+        moveFiltersNode();
       })
       .then(() => {
-        const sortSelect = $(".js-sort-select").select2("data");
-        sortSelect.length > 0 ? sortUsers() : null;
+        createPagination(1, pagesCount);
+        $(".js-sort-select").select2("data").length > 0 ? sortUsers() : null;
       })
       .then(() => {
         document.querySelector(".js-search-input").value = null;
@@ -91,8 +120,36 @@ document.addEventListener("DOMContentLoaded", function () {
         const operatorsSelect = $(".js-operators-select");
         operatorsSelect.on("select2:select", (event) => operatorsSelectHandlerForSelect(event, filterOpts));
         operatorsSelect.on("select2:unselect", (event) => operatorsSelectHandlerForUnselect(event, filterOpts));
+        
+        const paginationNode = $(".js-pagination-col");
+        paginationNode.on("click", function (event) {
+          const targetItem = event.target.closest(".pagination__item");
+          const targetPrev = event.target.closest(".js-page-prev:not(.pagination__arrow--disabled)");
+          const targetNext = event.target.closest(".js-page-next:not(.pagination__arrow--disabled)");
+          const targetFirst = event.target.closest(".js-page-first:not(.pagination__arrow--disabled)");
+          const targetLast = event.target.closest(".js-page-last:not(.pagination__arrow--disabled)");
+          let page;
+          
+          if (targetItem) {
+            page = +$(targetItem).text();
+            createPagination(page, pagesCount);
+            getUsersData(`https://randomuser.me/api/?page=${page}&results=${page === pagesCount ? usersCount % usersOnPage : usersOnPage}&seed=${seed}`)
+              .then((data) => {
+                Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
+                $(".js-sort-select").select2("data").length > 0 ? sortUsers() : null;
+                getNewStatistics();
+              });
+          } else if (targetPrev || targetNext || targetFirst || targetLast) {
+          
+          } else {
+            let activePages = $(".js-pagination-item.active");
+            let currentPage = activePages.eq(activePages.length - 1).text();
+          }
+        });
       });
   });
+  
+  $(window).on("resize", moveFiltersNode);
   
   // SEARCH SELECT HANDLERS <--------------------
   searchSelect.on("select2:select", usersSearch);
@@ -118,6 +175,21 @@ document.addEventListener("DOMContentLoaded", function () {
     event.ok ? enableAllSelectGroup(sortSelect) : null;
   });
   
+  // USERS TO SHOW SELECT HANDLERS <--------------------
+  usersToShowSelect.on("change", function (event) {
+    usersOnPage = isNaN(+event.target.value) ? usersCount : usersOnPage;
+    pagesCount = Math.ceil(usersCount / usersOnPage);
+    
+    let page = $(".js-pagination-item.active").eq(0).text();
+    createPagination(page, pagesCount);
+    getUsersData(`https://randomuser.me/api/?page=${page}&results=${page === pagesCount ? usersCount % usersOnPage : usersOnPage}&seed=${seed}`)
+      .then(() => {
+        Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
+        $(".js-sort-select").select2("data").length > 0 ? sortUsers() : null;
+        getNewStatistics();
+      });
+  });
+  
   // SEARCH FORM HANDLERS <--------------------
   const searchForm = document.querySelector(".js-search-form");
   searchForm.addEventListener("keyup", (event) => {
@@ -133,4 +205,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
   searchForm.addEventListener("submit", event => event.preventDefault());
+  
+  $(".btn1").on("click", function () {
+    test1(3, 13); // 2 3 4 5 6
+    test1(11, 13); // 9 10 11 12 13
+    test1(13, 13); // 9 10 11 12 13
+  });
+  
+  $(".btn2").on("click", function () {
+    test2(4, 5, 13, [2, 3]); // 2 3 4
+    test2(5, 5, 13, [3, 4]); // 5
+  });
 });
+
+
+function test2(i, currentMax, max, active) {
+  if (i > currentMax - 1) {
+    currentMax = createPagination(i, max);
+    test2(i, currentMax, max, []);
+  } else {
+    active.push(i);
+  }
+}
