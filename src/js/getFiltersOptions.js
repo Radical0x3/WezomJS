@@ -1,7 +1,9 @@
+import $ from "jquery";
+
 function getFiltersOptions(input, opts) {
   let filterOpts = opts;
-  let key = input.parentNode.parentNode.dataset.field;
-  let value = input.value;
+  let key = $(input).parents("fieldset").data("field");
+  let value = $(input).val();
   
   if (!input.checked) {
     filterOpts[key].splice(filterOpts[key].indexOf(value), 1);

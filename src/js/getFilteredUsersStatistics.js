@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 function getFilteredUsersStatistics() {
   const statistics = {
     users: {
@@ -7,20 +9,21 @@ function getFilteredUsersStatistics() {
     },
     nationalities: {},
   };
-
-  let cards = document.querySelectorAll(".js-user-card:not(.js-hidden-by-filter)");
-  cards.forEach((item) => {
-    const userNat = item.querySelector(".js-user-nat").textContent;
+  
+  let cards = $(".js-user-card:not(.d-none)");
+  cards.each((id, elem) => {
+    let item = $(elem);
+    const userNat = item.find(".js-user-nat").text();
     statistics.users.count++;
-    statistics.users[`${item.querySelector(".js-user-gender").textContent}`]++;
-
+    statistics.users[`${item.find(".js-user-gender").text()}`]++;
+    
     if (!statistics.nationalities.hasOwnProperty(userNat)) {
       statistics.nationalities[`${userNat}`] = 1;
     } else {
       statistics.nationalities[`${userNat}`]++;
     }
   });
-
+  
   return statistics;
 }
 

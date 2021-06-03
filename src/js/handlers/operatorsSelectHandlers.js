@@ -1,5 +1,6 @@
 import $ from "jquery";
 
+import fillUsersOperatorSelect from "../fillUsersOperatorSelect";
 import getFilteredUsers from "../getFilteredUsers";
 import getNewStatistics from "../getNewStatistics";
 
@@ -10,6 +11,7 @@ function operatorsSelectHandlerForSelect(event, filterOpts) {
   
   getFilteredUsers(filterOpts);
   getNewStatistics();
+  fillUsersOperatorSelect();
 }
 
 function operatorsSelectHandlerForUnselect(event, filterOpts) {
@@ -19,6 +21,7 @@ function operatorsSelectHandlerForUnselect(event, filterOpts) {
   
   getFilteredUsers(filterOpts);
   getNewStatistics();
+  fillUsersOperatorSelect();
 }
 
 export {

@@ -3,15 +3,14 @@ import "select2/dist/js/select2.min";
 
 import checkFailedResult from "./checkFailedResult";
 
-function usersSearch(event) {
-  event.preventDefault();
-  
-  const input = document.querySelector(".search-form__search");
+function usersSearch() {
+  const input = $(".search-form__search");
   const field = $(".js-search-select").select2("data")[0].id;
-  const inputValue = input.value.toUpperCase();
-  const cards = document.querySelectorAll(".js-user-card:not(.js-hidden-by-filter)");
+  const inputValue = input.val().toUpperCase();
+  const cards = $(".js-user-card:not(.js-hidden-by-filter)");
   
-  cards.forEach(function getMatch(info) {
+  cards.each(function (index, elem) {
+    let element = $(elem);
     let headingSelector;
     
     switch (field) {
@@ -28,13 +27,13 @@ function usersSearch(event) {
         headingSelector = ".js-user-fullname";
     }
     
-    let heading = info.querySelector(headingSelector);
-    let headingContent = heading.innerHTML.toUpperCase();
+    let heading = element.find(headingSelector);
+    let headingContent = heading.text().toUpperCase();
     
     if (headingContent.includes(inputValue)) {
-      info.classList.remove("d-none");
+      element.removeClass("d-none");
     } else {
-      info.classList.add("d-none");
+      element.addClass("d-none");
     }
   });
   

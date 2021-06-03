@@ -1,9 +1,11 @@
+import $ from "jquery";
+
 function resetUsersFilters() {
-  const cards = document.querySelectorAll(".js-user-card");
-  cards.forEach((item) => item.classList.remove("d-none", "js-hidden-by-filter"));
+  const cards = $(".js-user-card");
+  cards.each((id, item) => $(item).removeClass("d-none js-hidden-by-filter"));
   
-  const statisticsBlock = document.querySelector(".js-statistics");
-  statisticsBlock ? statisticsBlock.classList.remove("d-none") : null;
+  const statisticsBlock = $(".js-statistics");
+  statisticsBlock.length > 0 ? statisticsBlock.removeClass("d-none") : null;
 }
 
 export default resetUsersFilters;

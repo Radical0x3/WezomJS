@@ -1,6 +1,8 @@
+import $ from "jquery";
+
 function removeSearchFailedMessage() {
-  const searchFailed = document.querySelector(".js-search-failed");
-  searchFailed ? searchFailed.remove() : null;
+  const searchFailed = $(".js-search-failed");
+  searchFailed.length > 0 ? searchFailed.remove() : null;
 }
 
 export default removeSearchFailedMessage;

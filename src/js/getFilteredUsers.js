@@ -1,9 +1,11 @@
+import $ from "jquery";
+
 import checkFailedResult from "./checkFailedResult";
 import compareUserToFilter from "./compareUserToFilter";
 import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
 
 function getFilteredUsers(opts) {
-  const initialUsers = [...document.querySelectorAll(".js-user-card")];
+  const initialUsers = [...$(".js-user-card")];
   let filteredUsers = initialUsers;
   let tempUsers = [];
   
@@ -12,7 +14,7 @@ function getFilteredUsers(opts) {
       for (let arr of value) {
         let res = filteredUsers.filter(item => {
           let valueArr = arr.split(",");
-          let nodeValue = item.querySelector(`.js-user-${key}`).textContent;
+          let nodeValue = $(item).find(`.js-user-${key}`).text();
           
           return compareUserToFilter(nodeValue, valueArr);
         });
@@ -24,7 +26,8 @@ function getFilteredUsers(opts) {
   }
   
   for (let user of initialUsers) {
-    filteredUsers.includes(user) ? user.classList.remove("d-none", "js-hidden-by-filter") : user.classList.add("d-none", "js-hidden-by-filter");
+    filteredUsers.includes(user) ? $(user).removeClass("d-none js-hidden-by-filter") : $(user).addClass("d-none" +
+      " js-hidden-by-filter");
   }
   
   checkFailedResult();

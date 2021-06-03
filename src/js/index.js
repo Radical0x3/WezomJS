@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime";
 import $ from "jquery";
 import Handlebars from "handlebars/dist/handlebars.min";
 import "select2/dist/js/select2.min";
+
 import changePagination from "./changePagination";
 import changeUsersOnPage from "./changeUsersOnPage";
 import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
@@ -38,7 +39,7 @@ if (process.env.NODE_ENV === "development") {
   require("../html/index.html");
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
   // GLOBAL SETTINGS <--------------------
   let filterOpts = {};
   let seed = "";
@@ -59,10 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   usersToShowSelect.select2();
   
-  document.querySelector(".js-open-filters").addEventListener("click", () => openPopup(1));
+  $(".js-open-filters").on("click", () => openPopup(1));
   
   // LOAD USERS FROM RANDOMUSER.ME <--------------------
-  document.querySelector(".js-load-button").addEventListener("click", function () {
+  $(".js-load-button").on("click", function () {
     const url = `https://randomuser.me/api/?results=${getRandomNumber(1, 100)}`;
     getSeed(url).then(data => {
       seed = data.seed;
@@ -95,25 +96,26 @@ document.addEventListener("DOMContentLoaded", function () {
         $(".js-sort-select").select2("data").length > 0 ? sortUsers() : null;
       })
       .then(() => {
-        document.querySelector(".js-search-input").value = null;
-        document.querySelector(".js-statistics").classList.remove("d-none");
+        $(".js-search-input").val(null);
+        $(".js-statistics").removeClass("d-none");
         fillUsersOperatorSelect();
       })
       .then(() => {
         // FILTERS FORM HANDLERS <--------------------
-        const filtersForm = document.querySelector(".js-filters-form");
-        filtersForm.addEventListener("click", function (e) {
+        const filtersForm = $(".js-filters-form");
+        filtersForm.on("click", function (e) {
           const targetInput = e.target.closest("input");
+          
           if (targetInput) {
             filterOpts = getFiltersOptions(targetInput, filterOpts);
-            let filteredUsers = getFilteredUsers(filterOpts);
-            // checkFiltersOptionAvailability(filteredUsers);
+            getFilteredUsers(filterOpts);
+            fillUsersOperatorSelect();
           }
           
-          !e.target.closest(".select2") ? fillUsersOperatorSelect() : null;
+          usersSearch();
           getNewStatistics();
         });
-        filtersForm.addEventListener("reset", function () {
+        filtersForm.on("reset", function () {
           resetUsersFilters();
           getNewStatistics();
           removeSearchFailedMessage();
@@ -128,16 +130,20 @@ document.addEventListener("DOMContentLoaded", function () {
         operatorsSelect.on("select2:select", (event) => operatorsSelectHandlerForSelect(event, filterOpts));
         operatorsSelect.on("select2:unselect", (event) => operatorsSelectHandlerForUnselect(event, filterOpts));
         
+        // PAGINATION HANDLERS <--------------------
         $(".js-pagination-col").on("click", (event) => changePagination(event, pagesCount, usersCount, usersOnPage, seed, filterOpts));
       });
   });
   
-  document.querySelector(".js-more-button").addEventListener("click", () => getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts));
+  $(".js-more-button").on("click", () => getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts));
   
   $(window).on("resize", moveFiltersNode);
   
   // SEARCH SELECT HANDLERS <--------------------
-  searchSelect.on("select2:select", usersSearch);
+  searchSelect.on("select2:select", () => {
+    usersSearch();
+    fillUsersOperatorSelect();
+  });
   sortSelect.on("select2:selecting", (event) => disableSelectGroup(event, this, true));
   sortSelect.on("select2:select", function (event) {
     const element = $(event.params.data.element);
@@ -159,8 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
   sortSelect.on("change", function (event) {
     event.ok ? enableAllSelectGroup(sortSelect) : null;
   });
-  
-  // USERS TO SHOW SELECT HANDLERS <--------------------
+
+// USERS TO SHOW SELECT HANDLERS <--------------------
   usersToShowSelect.on("change", function (event) {
     let prevUsersOnPage = usersOnPage;
     usersOnPage = isNaN(+event.target.value) ? usersCount : event.target.value;
@@ -168,20 +174,22 @@ document.addEventListener("DOMContentLoaded", function () {
     
     changeUsersOnPage(usersOnPage, usersCount, prevUsersOnPage, pagesCount, filterOpts, seed);
   });
-  
-  // SEARCH FORM HANDLERS <--------------------
-  const searchForm = document.querySelector(".js-search-form");
-  searchForm.addEventListener("keyup", (event) => {
-    usersSearch(event);
+
+// SEARCH FORM HANDLERS <--------------------
+  const searchForm = $(".js-search-form");
+  searchForm.on("keyup", () => {
+    usersSearch();
+    fillUsersOperatorSelect();
     getNewStatistics();
   });
-  searchForm.addEventListener("search", searchFormHandlerForReset);
-  searchForm.addEventListener("reset", () => {
+  searchForm.on("search", searchFormHandlerForReset);
+  searchForm.on("reset", () => {
     searchFormHandlerForReset();
     sortSelect.val(null).trigger({
       type: "change",
       ok: true,
     });
   });
-  searchForm.addEventListener("submit", event => event.preventDefault());
-});
+  searchForm.on("submit", event => event.preventDefault());
+})
+;

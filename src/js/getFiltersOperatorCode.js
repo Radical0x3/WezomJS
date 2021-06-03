@@ -1,8 +1,9 @@
+import $ from "jquery";
+
 function getFiltersOperatorCode() {
   let arr = [];
-  document.querySelectorAll(".js-user-card:not(.js-hidden-by-filter)").forEach(item => {
-    let code = item.querySelector(".js-user-code").textContent;
-    
+  $(".js-user-card:not(.d-none)").each((id, elem) => {
+    let code = $(elem).find(".js-user-code").text();
     if (arr.indexOf(code) === -1) arr.push(code);
   });
   

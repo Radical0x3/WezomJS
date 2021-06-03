@@ -1,15 +1,17 @@
+import $ from "jquery";
 import Handlebars from "handlebars/dist/handlebars.min";
 
 import getUserTemplateContext from "./getUserTemplateContext";
 
 function getUsersData(url, append = false) {
-  const body = document.querySelector("body");
-  const button = document.querySelector(".js-load-button");
+  const body = $("body");
+  const button = $(".js-load-button");
+  const moreButton = $(".js-more-button");
   let result = "";
   
-  button.classList.add("button--hiding");
-  document.querySelector(".js-more-button").classList.add("button--hiding");
-  body.classList.add("loading");
+  button.addClass("button--hiding");
+  moreButton.addClass("button--hiding");
+  body.addClass("loading");
   
   const usersData = fetch(url)
     .then((response) => {
@@ -26,37 +28,34 @@ function getUsersData(url, append = false) {
       return data;
     })
     .then((data) => {
-      let targetRow = document.querySelector(".js-users-row");
+      let targetRow = $(".js-users-row");
       
-      if (targetRow) {
-        append ? targetRow.insertAdjacentHTML("beforeend", result) : targetRow.innerHTML = result;
+      if (targetRow.length > 0) {
+        append ? targetRow.append(result) : targetRow.html(result);
       } else {
-        const wrapper = document.createElement("div");
-        wrapper.classList.add("row", "js-main-content", "mb-4");
+        const wrapper = $(document.createElement("div"));
+        wrapper.addClass("row js-main-content mb-4");
         
-        const col = document.createElement("div");
-        col.classList.add("col", "js-users-col");
+        const col = $(document.createElement("div"));
+        col.addClass("col js-users-col");
         
-        const row = document.createElement("div");
-        row.classList.add("row", "js-users-row");
-        row.innerHTML = result;
+        const row = $(document.createElement("div"));
+        row.addClass("row js-users-row");
+        row.html(result);
         
         col.append(row);
         wrapper.append(col);
-        
-        document
-          .querySelector(".js-users-container")
-          .insertBefore(wrapper, document.querySelector(".js-actions-row"));
+        $(".js-actions-row").before(wrapper);
       }
       
       return data;
     })
     .catch((e) => console.log("Error: ", e.message))
     .finally(() => {
-      button.classList.remove("button--hiding");
-      document.querySelector(".js-more-button").classList.remove("button--hiding");
-      body.classList.remove("loading");
-      document.querySelector(".js-more-button").parentNode.classList.remove("d-none");
+      button.removeClass("button--hiding");
+      moreButton.removeClass("button--hiding");
+      body.removeClass("loading");
+      moreButton.parent().removeClass("d-none");
     })
     .then((data) => {
       return data;

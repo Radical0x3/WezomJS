@@ -9,6 +9,7 @@ function changePagination(event, pagesCount, usersCount, usersOnPage, seed, filt
   let page;
   
   if ($(targetItem).hasClass("active") && activeItems.length < 2) return;
+  $(".js-search-input").val(null);
   
   if (targetItem) {
     page = +$(targetItem).text();
