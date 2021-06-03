@@ -1,4 +1,5 @@
 import Handlebars from "handlebars/dist/handlebars.min";
+
 import sortNationalitiesByFrequency from "./sortNationalitiesByFrequency";
 
 function setUsersStatistics(statistics, show = true) {

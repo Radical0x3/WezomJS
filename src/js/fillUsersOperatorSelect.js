@@ -1,5 +1,6 @@
-import getFiltersOperatorCode from "./getFiltersOperatorCode";
 import $ from "jquery";
+
+import getFiltersOperatorCode from "./getFiltersOperatorCode";
 
 function fillUsersOperatorSelect() {
   const data = getFiltersOperatorCode();

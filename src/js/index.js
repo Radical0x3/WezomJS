@@ -3,35 +3,35 @@ import "regenerator-runtime/runtime";
 import $ from "jquery";
 import Handlebars from "handlebars/dist/handlebars.min";
 import "select2/dist/js/select2.min";
-
+import changePagination from "./changePagination";
+import changeUsersOnPage from "./changeUsersOnPage";
 import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
+import createPagination from "./createPagination";
 import disableSelectGroup from "./disableSelectGroup";
 import enableAllSelectGroup from "./enableAllSelectGroup";
 import fillUsersOperatorSelect from "./fillUsersOperatorSelect";
 import getFilteredUsers from "./getFilteredUsers";
 import getFiltersOptions from "./getFiltersOptions";
+import getMoreUsers from "./getMoreUsers";
 import getNewStatistics from "./getNewStatistics";
 import getRandomNumber from "./getRandomNumber";
+import getSeed from "./getSeed";
 import getUsersData from "./getUsersData";
 import getUsersStatistics from "./getUsersStatistics";
+import moveFiltersNode from "./moveFiltersNode";
+import {openPopup} from "./popup";
 import {operatorsSelectHandlerForSelect, operatorsSelectHandlerForUnselect} from "./handlers/operatorsSelectHandlers";
 import removeSearchFailedMessage from "./removeSearchFailedMessage";
 import resetSortOptionsOrder from "./resetSortOptionsOrder";
 import resetUsersFilters from "./resetUsersFilters";
 import {searchFormHandlerForReset} from "./handlers/searchFormHandlers";
+import setUsersAndPagination from "./setUsersAndPagination";
 import setUsersFilters from "./setUsersFilters";
 import sortUsers from "./sortUsers";
 import usersSearch from "./usersSearch";
 
 import "./registerHandebarsParts";
-
 import "../scss/style.scss";
-import {closePopup, openPopup} from "./popup";
-import moveFiltersNode from "./moveFiltersNode";
-import getUserTemplateContext from "./getUserTemplateContext";
-import setPagination from "./setPagination";
-import createPagination from "./createPagination";
-import getSeed from "./getSeed";
 
 // HTML HOT MODULE REPLACEMENT WHEN IT'S DEVELOPMENT MODE <--------------------
 if (process.env.NODE_ENV === "development") {
@@ -39,6 +39,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // GLOBAL SETTINGS <--------------------
   let filterOpts = {};
   let seed = "";
   let usersCount = 0;
@@ -58,21 +59,27 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   usersToShowSelect.select2();
   
-  document.querySelector(".js-open-filters").addEventListener("click", function () {
-    openPopup(1);
-  });
+  document.querySelector(".js-open-filters").addEventListener("click", () => openPopup(1));
   
   // LOAD USERS FROM RANDOMUSER.ME <--------------------
-  document.querySelector(".js-button").addEventListener("click", function () {
+  document.querySelector(".js-load-button").addEventListener("click", function () {
     const url = `https://randomuser.me/api/?results=${getRandomNumber(1, 100)}`;
     getSeed(url).then(data => {
       seed = data.seed;
       usersCount = data.results;
       usersOnPage = $(".js-users-to-show").val();
+      usersOnPage = usersOnPage === "all" ? usersCount : usersOnPage;
       pagesCount = Math.ceil(usersCount / usersOnPage);
-      console.log(usersCount);
       
-      return `https://randomuser.me/api/?page=1&results=${1 === pagesCount ? usersCount % usersOnPage : usersOnPage}&seed=${seed}`;
+      let results = usersCount / usersOnPage === 1 ? usersCount : usersOnPage;
+      if (pagesCount === 1) {
+        results = usersCount % usersOnPage === 0 ? usersOnPage : usersCount % usersOnPage;
+        $(".js-more-button").addClass("d-none");
+      } else {
+        $(".js-more-button").removeClass("d-none");
+      }
+      
+      return `https://randomuser.me/api/?page=1&results=${results}&seed=${seed}`;
     }).then((dataUrl) => getUsersData(dataUrl))
       .then((data) => {
         Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
@@ -121,33 +128,11 @@ document.addEventListener("DOMContentLoaded", function () {
         operatorsSelect.on("select2:select", (event) => operatorsSelectHandlerForSelect(event, filterOpts));
         operatorsSelect.on("select2:unselect", (event) => operatorsSelectHandlerForUnselect(event, filterOpts));
         
-        const paginationNode = $(".js-pagination-col");
-        paginationNode.on("click", function (event) {
-          const targetItem = event.target.closest(".pagination__item");
-          const targetPrev = event.target.closest(".js-page-prev:not(.pagination__arrow--disabled)");
-          const targetNext = event.target.closest(".js-page-next:not(.pagination__arrow--disabled)");
-          const targetFirst = event.target.closest(".js-page-first:not(.pagination__arrow--disabled)");
-          const targetLast = event.target.closest(".js-page-last:not(.pagination__arrow--disabled)");
-          let page;
-          
-          if (targetItem) {
-            page = +$(targetItem).text();
-            createPagination(page, pagesCount);
-            getUsersData(`https://randomuser.me/api/?page=${page}&results=${page === pagesCount ? usersCount % usersOnPage : usersOnPage}&seed=${seed}`)
-              .then((data) => {
-                Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
-                $(".js-sort-select").select2("data").length > 0 ? sortUsers() : null;
-                getNewStatistics();
-              });
-          } else if (targetPrev || targetNext || targetFirst || targetLast) {
-          
-          } else {
-            let activePages = $(".js-pagination-item.active");
-            let currentPage = activePages.eq(activePages.length - 1).text();
-          }
-        });
+        $(".js-pagination-col").on("click", (event) => changePagination(event, pagesCount, usersCount, usersOnPage, seed, filterOpts));
       });
   });
+  
+  document.querySelector(".js-more-button").addEventListener("click", () => getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts));
   
   $(window).on("resize", moveFiltersNode);
   
@@ -177,17 +162,11 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // USERS TO SHOW SELECT HANDLERS <--------------------
   usersToShowSelect.on("change", function (event) {
-    usersOnPage = isNaN(+event.target.value) ? usersCount : usersOnPage;
+    let prevUsersOnPage = usersOnPage;
+    usersOnPage = isNaN(+event.target.value) ? usersCount : event.target.value;
     pagesCount = Math.ceil(usersCount / usersOnPage);
     
-    let page = $(".js-pagination-item.active").eq(0).text();
-    createPagination(page, pagesCount);
-    getUsersData(`https://randomuser.me/api/?page=${page}&results=${page === pagesCount ? usersCount % usersOnPage : usersOnPage}&seed=${seed}`)
-      .then(() => {
-        Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
-        $(".js-sort-select").select2("data").length > 0 ? sortUsers() : null;
-        getNewStatistics();
-      });
+    changeUsersOnPage(usersOnPage, usersCount, prevUsersOnPage, pagesCount, filterOpts, seed);
   });
   
   // SEARCH FORM HANDLERS <--------------------
@@ -205,25 +184,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
   searchForm.addEventListener("submit", event => event.preventDefault());
-  
-  $(".btn1").on("click", function () {
-    test1(3, 13); // 2 3 4 5 6
-    test1(11, 13); // 9 10 11 12 13
-    test1(13, 13); // 9 10 11 12 13
-  });
-  
-  $(".btn2").on("click", function () {
-    test2(4, 5, 13, [2, 3]); // 2 3 4
-    test2(5, 5, 13, [3, 4]); // 5
-  });
 });
-
-
-function test2(i, currentMax, max, active) {
-  if (i > currentMax - 1) {
-    currentMax = createPagination(i, max);
-    test2(i, currentMax, max, []);
-  } else {
-    active.push(i);
-  }
-}

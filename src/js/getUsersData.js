@@ -1,12 +1,14 @@
 import Handlebars from "handlebars/dist/handlebars.min";
+
 import getUserTemplateContext from "./getUserTemplateContext";
 
-function getUsersData(url) {
+function getUsersData(url, append = false) {
   const body = document.querySelector("body");
-  const button = document.querySelector(".js-button");
+  const button = document.querySelector(".js-load-button");
   let result = "";
   
   button.classList.add("button--hiding");
+  document.querySelector(".js-more-button").classList.add("button--hiding");
   body.classList.add("loading");
   
   const usersData = fetch(url)
@@ -27,10 +29,10 @@ function getUsersData(url) {
       let targetRow = document.querySelector(".js-users-row");
       
       if (targetRow) {
-        targetRow.innerHTML = result;
+        append ? targetRow.insertAdjacentHTML("beforeend", result) : targetRow.innerHTML = result;
       } else {
         const wrapper = document.createElement("div");
-        wrapper.classList.add("row", "js-main-content");
+        wrapper.classList.add("row", "js-main-content", "mb-4");
         
         const col = document.createElement("div");
         col.classList.add("col", "js-users-col");
@@ -52,7 +54,9 @@ function getUsersData(url) {
     .catch((e) => console.log("Error: ", e.message))
     .finally(() => {
       button.classList.remove("button--hiding");
+      document.querySelector(".js-more-button").classList.remove("button--hiding");
       body.classList.remove("loading");
+      document.querySelector(".js-more-button").parentNode.classList.remove("d-none");
     })
     .then((data) => {
       return data;

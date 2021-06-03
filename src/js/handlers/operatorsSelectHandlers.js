@@ -1,7 +1,7 @@
 import $ from "jquery";
+
 import getFilteredUsers from "../getFilteredUsers";
-import getFilteredUsersStatistics from "../getFilteredUsersStatistics";
-import setUsersStatistics from "../setUsersStatistics";
+import getNewStatistics from "../getNewStatistics";
 
 function operatorsSelectHandlerForSelect(event, filterOpts) {
   let key = $(event.params.data.element.parentNode).parent().data("field");
@@ -9,9 +9,7 @@ function operatorsSelectHandlerForSelect(event, filterOpts) {
   filterOpts.hasOwnProperty(key) ? filterOpts[key].push(value) : filterOpts[key] = [value];
   
   getFilteredUsers(filterOpts);
-  
-  const statistics = getFilteredUsersStatistics();
-  setUsersStatistics(statistics);
+  getNewStatistics();
 }
 
 function operatorsSelectHandlerForUnselect(event, filterOpts) {
@@ -20,9 +18,7 @@ function operatorsSelectHandlerForUnselect(event, filterOpts) {
   filterOpts[key].splice(filterOpts[key].indexOf(value), 1);
   
   getFilteredUsers(filterOpts);
-  
-  const statistics = getFilteredUsersStatistics();
-  setUsersStatistics(statistics);
+  getNewStatistics();
 }
 
 export {

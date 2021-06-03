@@ -87,45 +87,13 @@
     </div>
   </div>
   
-  <!--  <div class="row">-->
-  <!--    <div class="col-12">-->
-  <!--      <div class="pagination">-->
-  <!--        <div class="pagination__arrow pagination__arrow&#45;&#45;disabled">-->
-  <!--          <svg class="pagination__icon">-->
-  <!--            <use href="images/icons/spritemap.svg#sprite-navigate-to-beginning"></use>-->
-  <!--          </svg>-->
-  <!--        </div>-->
-  <!--        <div class="pagination__arrow">-->
-  <!--          <svg class="pagination__icon">-->
-  <!--            <use href="images/icons/spritemap.svg#sprite-left-arrow"></use>-->
-  <!--          </svg>-->
-  <!--        </div>-->
-  <!--        -->
-  <!--        <div class="pagination__list">-->
-  <!--          <div class="pagination__item">1</div>-->
-  <!--          <div class="pagination__item active">2</div>-->
-  <!--          <div class="pagination__item">3</div>-->
-  <!--          <div class="pagination__item">4</div>-->
-  <!--          <div class="pagination__item">5</div>-->
-  <!--        </div>-->
-  <!--        -->
-  <!--        <div class="pagination__arrow">-->
-  <!--          <svg class="pagination__icon">-->
-  <!--            <use href="images/icons/spritemap.svg#sprite-right-arrow"></use>-->
-  <!--          </svg>-->
-  <!--        </div>-->
-  <!--        <div class="pagination__arrow">-->
-  <!--          <svg class="pagination__icon">-->
-  <!--            <use href="images/icons/spritemap.svg#sprite-navigate-to-end"></use>-->
-  <!--          </svg>-->
-  <!--        </div>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </div>-->
-  
-  <div class="row js-actions-row">
-    <div class="col-12 js-button-container">
-      <button class="button button--load js-button">Load users</button>
+  <div class="row js-actions-row justify-content-center mb-4">
+    <div class="col-m-auto col-12">
+      <button class="button button--load js-load-button mb-3">Load new users</button>
+    </div>
+    
+    <div class="col-m-auto col-12 d-none">
+      <button class="button button--load button--more js-more-button mb-3">Load more users</button>
     </div>
     
     <div class="col-12">
@@ -338,23 +306,23 @@
 <script id="pagination-template" type="text/x-handlebars-template">
   <div class="pagination js-pagination">
     {{#if first}}
-      <div class="pagination__arrow pagination__arrow--disabled js-page-first">
+      <div class="pagination__arrow pagination__arrow--disabled js-pagination-arrow" data-page-action="start">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-navigate-to-beginning"></use>
         </svg>
       </div>
-      <div class="pagination__arrow pagination__arrow--disabled js-page-prev">
+      <div class="pagination__arrow pagination__arrow--disabled js-pagination-arrow" data-page-action="prev">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-left-arrow"></use>
         </svg>
       </div>
     {{else}}
-      <div class="pagination__arrow">
+      <div class="pagination__arrow js-pagination-arrow" data-page-action="start">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-navigate-to-beginning"></use>
         </svg>
       </div>
-      <div class="pagination__arrow">
+      <div class="pagination__arrow js-pagination-arrow" data-page-action="prev">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-left-arrow"></use>
         </svg>
@@ -364,31 +332,31 @@
     <div class="pagination__list">
       {{#each pages}}
         {{#if this.active}}
-          <div class="pagination__item active js-pagination-item">{{this.value}}</div>
+          <div class="pagination__item active js-pagination-item" data-page-id="{{this.value}}">{{this.value}}</div>
         {{else}}
-          <div class="pagination__item js-pagination-item">{{this.value}}</div>
+          <div class="pagination__item js-pagination-item" data-page-id="{{this.value}}">{{this.value}}</div>
         {{/if}}
       {{/each}}
     </div>
     
     {{#if last}}
-      <div class="pagination__arrow pagination__arrow--disabled">
+      <div class="pagination__arrow pagination__arrow--disabled js-pagination-arrow" data-page-action="next">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-right-arrow"></use>
         </svg>
       </div>
-      <div class="pagination__arrow pagination__arrow--disabled">
+      <div class="pagination__arrow pagination__arrow--disabled js-pagination-arrow" data-page-action="end">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-navigate-to-end"></use>
         </svg>
       </div>
     {{else}}
-      <div class="pagination__arrow js-page-next">
+      <div class="pagination__arrow js-pagination-arrow" data-page-action="next">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-right-arrow"></use>
         </svg>
       </div>
-      <div class="pagination__arrow js-page-last">
+      <div class="pagination__arrow js-pagination-arrow" data-page-action="end">
         <svg class="pagination__icon">
           <use href="images/icons/spritemap.svg#sprite-navigate-to-end"></use>
         </svg>

@@ -9,12 +9,19 @@ function setPagination(opts) {
     paginationNode.html(pagination);
   } else {
     let paginationRow = $(document.createElement("div"));
-    paginationRow.addClass("row");
+    paginationRow.addClass("row mb-3");
     let paginationCol = $(document.createElement("div"));
     paginationCol.addClass("col-12 js-pagination-col");
+    opts.pages.length < 2 ? paginationCol.addClass("d-none") : paginationCol.removeClass("d-none");
     paginationCol.html(pagination);
     paginationRow.html(paginationCol);
     $(paginationRow).insertAfter(".js-main-content");
+  }
+  
+  if (opts.pages.length < 2) {
+    paginationNode.addClass("d-none");
+  } else {
+    paginationNode.removeClass("d-none");
   }
 }
 
