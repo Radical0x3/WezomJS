@@ -30,6 +30,7 @@ function getFilteredUsers(opts) {
       " js-hidden-by-filter");
   }
   
+  checkFiltersOptionAvailability();
   checkFailedResult();
   
   return filteredUsers;

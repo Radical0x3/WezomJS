@@ -25,7 +25,7 @@ function getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts) {
       results = usersCount % results > 0 ? usersCount % results : results;
     }
     
-    getUsersData(`https://randomuser.me/api/?page=${page}&results=${results}&seed=${seed}`, true)
+    return getUsersData(`https://randomuser.me/api/?page=${page}&results=${results}&seed=${seed}`, true)
       .then(() => {
         Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
         setUsersFilters();
@@ -53,6 +53,8 @@ function getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts) {
         } else {
           $(".js-more-button").removeClass("d-none");
         }
+        
+        return [...$(".js-user-card")];
       });
   }
 }

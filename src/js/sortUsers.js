@@ -1,8 +1,8 @@
 import $ from "jquery";
 import "select2/dist/js/select2.min";
 
-function sortUsers() {
-  const elements = $(".js-user-card");
+function sortUsers(defaultUsers) {
+  const elements = defaultUsers || $(".js-user-card");
   const opts = $(".js-sort-select").select2("data");
   const targetRow = $(".js-users-row");
   let result = "";

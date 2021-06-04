@@ -1,132 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>JS Tasks</title>
-  <meta charset="UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="css/fonts.css"/>
-<link href="css/vendors.css" rel="stylesheet"><link href="css/main.css" rel="stylesheet"></head>
-
-<body>
-<div class="container-fluid js-users-container">
-  <div class="row js-search-row d-none align-items-center justify-content-sm-start justify-content-between">
-    <div class="col-sm col-12 mb-sm-0 mb-2">
-      <form class="search-form js-search-form" action="#" id="search-form">
-        <input class="search-form__search js-search-input" type="search" name="search-input"
-               placeholder="Search..."/>
-      </form>
-    </div>
-    
-    <div class="col-lg-2 col-md-3 col-sm-4 col-8">
-      <div class="custom-select">
-        <select class="js-search-select" name="select">
-          <option></option>
-          <option value="fullName">Full Name</option>
-          <option value="mobile">Mobile</option>
-          <option value="email">Email</option>
-        </select>
-      </div>
-    </div>
-    
-    <div class="col-auto">
-      <button class="button button--reset" type="reset" form="search-form">
-        Reset
-      </button>
-    </div>
-    
-    <div class="w-100 mb-2"></div>
-    
-    <div class="col-xxl-2 col-lg-3 d-lg-flex d-none"></div>
-    
-    <div class="col">
-      <div class="row justify-content-between align-items-center">
-        <div class="col-xl-3 col-lg-4 col-sm-5 col-7">
-          <div class="custom-select">
-            <select class="js-sort-select" name="sort[]" multiple>
-              <option value="fullname-asc" data-groupid="fullname" data-optindex="1">
-                Full Name (A-Z)
-              </option>
-              
-              <option value="fullname-desc" data-groupid="fullname" data-optindex="2">
-                Full Name (Z-A)
-              </option>
-              
-              <option value="gender-asc" data-groupid="gender" data-optindex="3">
-                Gender (A-Z)
-              </option>
-              
-              <option value="gender-desc" data-groupid="gender" data-optindex="4">
-                Gender (Z-A)
-              </option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="col-sm-3 col-12 d-lg-none order-sm-0 order-1 mt-sm-0 mt-2 js-filters-btn">
-          <button class="button button--open-popup button--wide js-open-filters">
-            <span class="button__label">Filters</span>
-            <svg class="button__icon">
-              <use href="images/icons/spritemap.svg#sprite-filter"></use>
-            </svg>
-          </button>
-        </div>
-        
-        <div class="col-xxl-2 col-lg-3 col-sm-4 col-5">
-          <div class="custom-select">
-            <span class="custom-select__label">Users:</span>
-            <select name="usersToShow" class="js-users-to-show">
-              <option value="5">5</option>
-              <option value="10" selected>10</option>
-              <option value="20">20</option>
-              <option value="all">all</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="row js-actions-row justify-content-center mb-4">
-    <div class="col-m-auto col-12">
-      <button class="button button--load js-load-button mb-3">Load new users</button>
-    </div>
-    
-    <div class="col-m-auto col-12 d-none">
-      <button class="button button--load button--more js-more-button mb-3">Load more users</button>
-    </div>
-    
-    <div class="col-12">
-      <div class="lds-roller mb-3">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="popup js-popup" data-id-popup="1">
-  <div class="popup__opas"></div>
-  <div class="popup__wrap js-popup__wrap">
-    <div class="popup__container">
-      <h3 class="popup__title">Filters</h3>
-      <div class="popup__close js-popup__close">
-        <svg>
-          <use href="images/icons/spritemap.svg#sprite-cancel"></use>
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script id="user-template" type="text/x-handlebars-template">
-  <div class="col-xxl-3 col-md-4 col-m-6 col-12 my-3 js-user-card">
+<!doctype html><html lang="en"><head><title>JS Tasks</title><meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="stylesheet" href="css/fonts.css"/><link href="css/vendors.css" rel="stylesheet"><link href="css/main.css" rel="stylesheet"></head><body><div class="container-fluid js-users-container"><div class="row js-search-row d-none align-items-center justify-content-sm-start justify-content-between"><div class="col-sm col-12 mb-sm-0 mb-2"><form class="search-form js-search-form" action="#" id="search-form"><input class="search-form__search js-search-input" type="search" name="search-input" placeholder="Search..."/></form></div><div class="col-lg-2 col-md-3 col-sm-4 col-8"><div class="custom-select"><select class="js-search-select" name="select"><option></option><option value="fullName">Full Name</option><option value="mobile">Mobile</option><option value="email">Email</option></select></div></div><div class="col-auto"><button class="button button--reset" type="reset" form="search-form">Reset</button></div><div class="w-100 mb-2"></div><div class="col-xxl-2 col-lg-3 d-lg-flex d-none"></div><div class="col"><div class="row justify-content-between align-items-center"><div class="col-xl-3 col-lg-4 col-sm-5 col-7"><div class="custom-select"><select class="js-sort-select" name="sort[]" multiple="multiple"><option value="fullname-asc" data-groupid="fullname" data-optindex="1">Full Name (A-Z)</option><option value="fullname-desc" data-groupid="fullname" data-optindex="2">Full Name (Z-A)</option><option value="gender-asc" data-groupid="gender" data-optindex="3">Gender (A-Z)</option><option value="gender-desc" data-groupid="gender" data-optindex="4">Gender (Z-A)</option></select></div></div><div class="col-sm-3 col-12 d-lg-none order-sm-0 order-1 mt-sm-0 mt-2 js-filters-btn"><button class="button button--open-popup button--wide js-open-filters"><span class="button__label">Filters</span> <svg class="button__icon"><use href="images/icons/spritemap.svg#sprite-filter"></use></svg></button></div><div class="col-xxl-2 col-lg-3 col-sm-4 col-5"><div class="custom-select"><span class="custom-select__label">Users:</span> <select name="usersToShow" class="js-users-to-show"><option value="5">5</option><option value="10" selected="selected">10</option><option value="20">20</option><option value="all">all</option></select></div></div></div></div></div><div class="row js-actions-row justify-content-center mb-4"><div class="col-m-auto col-12"><button class="button button--load js-load-button mb-3">Load new users</button></div><div class="col-m-auto col-12 d-none"><button class="button button--load button--more js-more-button mb-3">Load more users</button></div><div class="col-12"><div class="lds-roller mb-3"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div></div></div><div class="popup js-popup" data-id-popup="1"><div class="popup__opas"></div><div class="popup__wrap js-popup__wrap"><div class="popup__container"><h3 class="popup__title">Filters</h3><div class="popup__close js-popup__close"><svg><use href="images/icons/spritemap.svg#sprite-cancel"></use></svg></div></div></div></div><script id="user-template" type="text/x-handlebars-template"><div class="col-xxl-3 col-md-4 col-m-6 col-12 my-3 js-user-card">
     <div class="user">
       <div class="user__top">
         <div class="avatar avatar--rounded">
@@ -186,11 +58,7 @@
       <div class="user__age js-user-age" hidden>{{age}}</div>
       <div class="user__code js-user-code" hidden>{{cell.code}}</div>
     </div>
-  </div>
-</script>
-
-<script id="filters-template" type="text/x-handlebars-template">
-  <aside class="filters">
+  </div></script><script id="filters-template" type="text/x-handlebars-template"><aside class="filters">
     <form action="#" class="filters-form js-filters-form" id="filters-form">
       <fieldset class="filters-form__fieldset" data-field="gender">
         <legend class="filters-form__legend">Gender</legend>
@@ -246,11 +114,7 @@
         <div class="button__label">Reset</div>
       </button>
     </form>
-  </aside>
-</script>
-
-<script id="statistics-template" type="text/x-handlebars-template">
-  <div class="row">
+  </aside></script><script id="statistics-template" type="text/x-handlebars-template"><div class="row">
     <div class="col-12 js-statistics">
       <div class="statistics">
         <div class="block-title">User Statistics</div>
@@ -286,25 +150,13 @@
         </div>
       </div>
     </div>
-  </div>
-</script>
-
-<script id="nats-list-item-template" type="text/x-handlebars-template">
-  <div class="nats-list__item">
+  </div></script><script id="nats-list-item-template" type="text/x-handlebars-template"><div class="nats-list__item">
     <span class="nats-list__item-key">{{key}}</span>
     <span>:</span>
     <span class="nats-list__item-value">{{value}}</span>
-  </div>
-</script>
-
-<script id="search-failed-template" type="text/x-handlebars-template">
-  <div class="col-12 js-search-failed">
+  </div></script><script id="search-failed-template" type="text/x-handlebars-template"><div class="col-12 js-search-failed">
     <div class="search-failed">Nothing matches your request...</div>
-  </div>
-</script>
-
-<script id="pagination-template" type="text/x-handlebars-template">
-  <div class="pagination js-pagination">
+  </div></script><script id="pagination-template" type="text/x-handlebars-template"><div class="pagination js-pagination">
     {{#if first}}
       <div class="pagination__arrow pagination__arrow--disabled js-pagination-arrow" data-page-action="start">
         <svg class="pagination__icon">
@@ -362,7 +214,4 @@
         </svg>
       </div>
     {{/if}}
-  </div>
-</script>
-<script defer src="vendors.bundle.js"></script><script defer src="main.bundle.js"></script></body>
-</html>
+  </div></script><script defer="defer" src="vendors.bundle.js"></script><script defer="defer" src="main.bundle.js"></script></body></html>

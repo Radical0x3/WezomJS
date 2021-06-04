@@ -1,30 +1,37 @@
+import $ from "jquery";
 import compareUserToFilter from "./compareUserToFilter";
 
-function checkFiltersOptionAvailability(filteredUsers) {
-  const optionsGroup = [...document.querySelectorAll(".filters fieldset:not(:last-child)")];
+function checkFiltersOptionAvailability() {
+  const optionsGroup = [...$(".filters fieldset:not(:last-child)")];
   
   for (let group of optionsGroup) {
-    let options = [...group.querySelectorAll("input:not(:checked)")];
+    let users = [...$(".js-user-card:not(.js-hidden-by-filter)")];
+    let options = [...$(group).find("input:not(:checked)")];
+    let optionsChecked = $(group).find("input:checked");
+    let res = [];
+    
+    if (optionsChecked.length > 0) continue;
     
     for (let opt of options) {
-      let optValue = opt.value.split(",");
-      let optTag = group.dataset.field;
+      opt = $(opt);
+      let optValue = opt.val().split(",");
+      let optTag = $(group).data("field");
       
-      let res = filteredUsers.filter(item => {
-        let nodeValue = item.querySelector(`.js-user-${optTag}`).textContent;
+      let temp = users.filter(item => {
+        let nodeValue = $(item).find(`.js-user-${optTag}`).text();
         
         return compareUserToFilter(nodeValue, optValue);
       });
+      res = [...res, ...temp];
       
-      if (res.length === 0) {
-        opt.setAttribute("disabled", true);
-        opt.parentNode.classList.add("disabled");
+      if (temp.length === 0) {
+        opt.attr("disabled", true);
+        opt.parent().addClass("disabled");
       } else {
-        opt.removeAttribute("disabled");
-        opt.parentNode.classList.remove("disabled");
+        opt.removeAttr("disabled");
+        opt.parent().removeClass("disabled");
       }
     }
-    
   }
 }
 

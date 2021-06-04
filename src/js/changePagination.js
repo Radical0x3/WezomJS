@@ -16,7 +16,8 @@ function changePagination(event, pagesCount, usersCount, usersOnPage, seed, filt
     const moreButton = $(".js-more-button");
     page === pagesCount ? moreButton.addClass("d-none") : moreButton.removeClass("d-none");
     
-    setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts);
+    return setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts)
+      .then(data => data);
   }
   
   if (targetArrow) {
@@ -43,7 +44,8 @@ function changePagination(event, pagesCount, usersCount, usersOnPage, seed, filt
     const moreButton = $(".js-more-button");
     page === pagesCount ? moreButton.addClass("d-none") : moreButton.removeClass("d-none");
     
-    setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts);
+    return setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts)
+      .then(data => data);
   }
 }
 

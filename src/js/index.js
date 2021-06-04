@@ -6,7 +6,6 @@ import "select2/dist/js/select2.min";
 
 import changePagination from "./changePagination";
 import changeUsersOnPage from "./changeUsersOnPage";
-import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
 import createPagination from "./createPagination";
 import disableSelectGroup from "./disableSelectGroup";
 import enableAllSelectGroup from "./enableAllSelectGroup";
@@ -18,7 +17,6 @@ import getNewStatistics from "./getNewStatistics";
 import getRandomNumber from "./getRandomNumber";
 import getSeed from "./getSeed";
 import getUsersData from "./getUsersData";
-import getUsersStatistics from "./getUsersStatistics";
 import moveFiltersNode from "./moveFiltersNode";
 import {openPopup} from "./popup";
 import {operatorsSelectHandlerForSelect, operatorsSelectHandlerForUnselect} from "./handlers/operatorsSelectHandlers";
@@ -26,13 +24,13 @@ import removeSearchFailedMessage from "./removeSearchFailedMessage";
 import resetSortOptionsOrder from "./resetSortOptionsOrder";
 import resetUsersFilters from "./resetUsersFilters";
 import {searchFormHandlerForReset} from "./handlers/searchFormHandlers";
-import setUsersAndPagination from "./setUsersAndPagination";
 import setUsersFilters from "./setUsersFilters";
 import sortUsers from "./sortUsers";
 import usersSearch from "./usersSearch";
 
 import "./registerHandebarsParts";
 import "../scss/style.scss";
+import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
 
 // HTML HOT MODULE REPLACEMENT WHEN IT'S DEVELOPMENT MODE <--------------------
 if (process.env.NODE_ENV === "development") {
@@ -46,6 +44,7 @@ $(document).ready(function () {
   let usersCount = 0;
   let usersOnPage = 0;
   let pagesCount = 0;
+  let defaultUsers = [];
   
   const searchSelect = $(".js-search-select");
   const sortSelect = $(".js-sort-select");
@@ -82,7 +81,8 @@ $(document).ready(function () {
       
       return `https://randomuser.me/api/?page=1&results=${results}&seed=${seed}`;
     }).then((dataUrl) => getUsersData(dataUrl))
-      .then((data) => {
+      .then(() => {
+        defaultUsers = [...$(".js-user-card")];
         Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
         getNewStatistics();
         $(".js-search-row").removeClass("d-none");
@@ -90,6 +90,7 @@ $(document).ready(function () {
       .then(() => {
         setUsersFilters();
         moveFiltersNode();
+        checkFiltersOptionAvailability();
       })
       .then(() => {
         createPagination(1, pagesCount);
@@ -131,11 +132,17 @@ $(document).ready(function () {
         operatorsSelect.on("select2:unselect", (event) => operatorsSelectHandlerForUnselect(event, filterOpts));
         
         // PAGINATION HANDLERS <--------------------
-        $(".js-pagination-col").on("click", (event) => changePagination(event, pagesCount, usersCount, usersOnPage, seed, filterOpts));
+        $(".js-pagination-col").on("click", (event) => {
+          changePagination(event, pagesCount, usersCount, usersOnPage, seed, filterOpts)
+            .then(data => defaultUsers = data);
+        });
       });
   });
   
-  $(".js-more-button").on("click", () => getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts));
+  $(".js-more-button").on("click", () => {
+    getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts)
+      .then((data) => defaultUsers = data);
+  });
   
   $(window).on("resize", moveFiltersNode);
   
@@ -158,8 +165,11 @@ $(document).ready(function () {
     resetSortOptionsOrder(event, this);
     
     const target = $(event.target).select2("data");
+    
     if (target.length > 0) {
       sortUsers();
+    } else {
+      sortUsers(defaultUsers);
     }
   });
   sortSelect.on("change", function (event) {
