@@ -3,41 +3,28 @@ import "select2/dist/js/select2.min";
 
 import checkFailedResult from "./checkFailedResult";
 
-function usersSearch() {
+function usersSearch(users, usersOnPage) {
+  const loadMore = $(".js-more-button");
   const input = $(".search-form__search");
   const field = $(".js-search-select").select2("data")[0].id;
   const inputValue = input.val().toUpperCase();
-  const cards = $(".js-user-card:not(.js-hidden-by-filter)");
   
-  cards.each(function (index, elem) {
-    let element = $(elem);
-    let headingSelector;
-    
+  const filteredUsers = users.filter(user => {
+    let heading;
     switch (field) {
-      case "fullName":
-        headingSelector = ".js-user-fullname";
-        break;
-      case "mobile":
-        headingSelector = ".js-user-tel";
-        break;
-      case "email":
-        headingSelector = ".js-user-email";
+      case "tel":
+        heading = user.cell.edited.toUpperCase();
         break;
       default:
-        headingSelector = ".js-user-fullname";
+        heading = user[`${field}`].toUpperCase();
     }
-    
-    let heading = element.find(headingSelector);
-    let headingContent = heading.text().toUpperCase();
-    
-    if (headingContent.includes(inputValue)) {
-      element.removeClass("d-none");
-    } else {
-      element.addClass("d-none");
-    }
+    return heading.includes(inputValue);
   });
   
-  checkFailedResult();
+  filteredUsers.length > usersOnPage ? loadMore.removeClass("d-none") : loadMore.addClass("d-none");
+  
+  checkFailedResult(filteredUsers);
+  return filteredUsers;
 }
 
 export default usersSearch;

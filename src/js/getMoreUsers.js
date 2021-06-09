@@ -8,24 +8,14 @@ import getUsersData from "./getUsersData";
 import setUsersFilters from "./setUsersFilters";
 import sortUsers from "./sortUsers";
 
-function getMoreUsers(pagesCount, usersCount, usersOnPage, seed, filterOpts) {
+function getMoreUsers(users, pagesCount, usersCount, usersOnPage, filterOpts) {
   let activePages = $(".js-pagination-item.active");
   let page = +activePages.eq(activePages.length - 1).data("pageId");
   
   if (page < pagesCount) {
     page++;
     
-    let results;
-    if (usersOnPage < usersCount) {
-      results = usersOnPage;
-    } else {
-      results = usersCount;
-    }
-    if (page === pagesCount) {
-      results = usersCount % results > 0 ? usersCount % results : results;
-    }
-    
-    return getUsersData(`https://randomuser.me/api/?page=${page}&results=${results}&seed=${seed}`, true)
+    return getUsersData(users, page, usersOnPage, true)
       .then(() => {
         Object.entries(filterOpts).length > 0 ? getFilteredUsers(filterOpts) : null;
         setUsersFilters();

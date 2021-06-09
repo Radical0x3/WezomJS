@@ -1,6 +1,4 @@
-import $ from "jquery";
-
-function getFilteredUsersStatistics() {
+function getFilteredUsersStatistics(users) {
   const statistics = {
     users: {
       count: 0,
@@ -10,19 +8,16 @@ function getFilteredUsersStatistics() {
     nationalities: {},
   };
   
-  let cards = $(".js-user-card:not(.d-none)");
-  cards.each((id, elem) => {
-    let item = $(elem);
-    const userNat = item.find(".js-user-nat").text();
+  for (let user of users) {
     statistics.users.count++;
-    statistics.users[`${item.find(".js-user-gender").text()}`]++;
+    statistics.users[`${user.gender}`]++;
     
-    if (!statistics.nationalities.hasOwnProperty(userNat)) {
-      statistics.nationalities[`${userNat}`] = 1;
+    if (!statistics.nationalities.hasOwnProperty(user.nat)) {
+      statistics.nationalities[`${user.nat}`] = 1;
     } else {
-      statistics.nationalities[`${userNat}`]++;
+      statistics.nationalities[`${user.nat}`]++;
     }
-  });
+  }
   
   return statistics;
 }

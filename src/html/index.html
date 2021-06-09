@@ -21,9 +21,8 @@
     <div class="col-lg-2 col-md-3 col-sm-4 col-8">
       <div class="custom-select">
         <select class="js-search-select" name="select">
-          <option></option>
-          <option value="fullName">Full Name</option>
-          <option value="mobile">Mobile</option>
+          <option value="fullname">Full Name</option>
+          <option value="tel">Mobile</option>
           <option value="email">Email</option>
         </select>
       </div>
@@ -43,7 +42,7 @@
       <div class="row justify-content-between align-items-center">
         <div class="col-xl-3 col-lg-4 col-sm-5 col-7">
           <div class="custom-select">
-            <select class="js-sort-select" name="sort[]" multiple>
+            <select class="js-sort-select" name="sort[]" multiple data-placeholder="Sort options">
               <option value="fullname-asc" data-groupid="fullname" data-optindex="1">
                 Full Name (A-Z)
               </option>
@@ -136,7 +135,7 @@
           </a>
         </div>
         <a href="/" class="user__fullname js-user-fullname"
-           title="{{name.first}} {{name.last}}">{{name.first}} {{name.last}}
+           title="{{fullname}}">{{fullname}}
         </a>
         <div class="user__gender js-user-gender">{{gender}}</div>
       </div>
@@ -181,10 +180,6 @@
           </div>
         </div>
       </div>
-      
-      <div class="user__nat js-user-nat" hidden>{{nat}}</div>
-      <div class="user__age js-user-age" hidden>{{age}}</div>
-      <div class="user__code js-user-code" hidden>{{cell.code}}</div>
     </div>
   </div>
 </script>
@@ -239,7 +234,8 @@
       <fieldset class="filters-form__fieldset" data-field="code">
         <legend class="filters-form__legend">Operator's code</legend>
         
-        <select class="filters-form__operators js-operators-select" name="operators[]" multiple></select>
+        <select class="filters-form__operators js-operators-select" name="operators[]" multiple
+                data-placeholder="Choose an operator"></select>
       </fieldset>
       
       <button class="button button--wide" type="reset">
@@ -298,8 +294,10 @@
 </script>
 
 <script id="search-failed-template" type="text/x-handlebars-template">
-  <div class="col-12 js-search-failed">
-    <div class="search-failed">Nothing matches your request...</div>
+  <div class="row js-search-failed-row">
+    <div class="col-12 js-search-failed">
+      <div class="search-failed">Nothing matches your request...</div>
+    </div>
   </div>
 </script>
 

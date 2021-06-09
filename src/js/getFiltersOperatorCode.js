@@ -1,11 +1,9 @@
-import $ from "jquery";
-
-function getFiltersOperatorCode() {
+function getFiltersOperatorCode(users) {
   let arr = [];
-  $(".js-user-card:not(.d-none)").each((id, elem) => {
-    let code = $(elem).find(".js-user-code").text();
-    if (arr.indexOf(code) === -1) arr.push(code);
-  });
+  
+  for (let user of users) {
+    if (arr.indexOf(user.code) === -1) arr.push(user.code);
+  }
   
   arr = arr.sort((a, b) => a > b ? 1 : -1);
   return arr;

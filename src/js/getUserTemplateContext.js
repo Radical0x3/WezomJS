@@ -3,16 +3,13 @@ import getUsersOperatorCode from "./getUsersOperatorCode";
 function getUserTemplateContext(user) {
   return {
     picture: user.picture.large,
-    name: {
-      first: user.name.first,
-      last: user.name.last,
-    },
+    fullname: user.name.first + " " + user.name.last,
     gender: user.gender,
     cell: {
       raw: user.cell,
       edited: user.cell.replace(/[-()\s]/g, ""),
-      code: getUsersOperatorCode(user.cell)
     },
+    code: getUsersOperatorCode(user.cell),
     email: user.email,
     location: {
       state: user.location.state,

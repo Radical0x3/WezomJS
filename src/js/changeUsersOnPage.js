@@ -2,19 +2,17 @@ import $ from "jquery";
 
 import setUsersAndPagination from "./setUsersAndPagination";
 
-function changeUsersOnPage(usersOnPage, usersCount, prevUsersOnPage, pagesCount, filterOpts, seed) {
-  let page = +$(".js-pagination-item.active").eq(0).text();
+function changeUsersOnPage(users, page, usersOnPage, prevUsersOnPage, pagesCount) {
+  let newPage = page;
   
-  if (usersOnPage < usersCount) {
-    page = usersOnPage > prevUsersOnPage ? page / (usersOnPage / prevUsersOnPage) : prevUsersOnPage / usersOnPage * page;
-    page = page < 1 ? 1 : Math.ceil(page);
-    page = page > pagesCount ? pagesCount : page;
-  }
+  newPage = usersOnPage > prevUsersOnPage ? newPage / (usersOnPage / prevUsersOnPage) : prevUsersOnPage / usersOnPage * newPage;
+  newPage = newPage < 1 ? 1 : Math.ceil(newPage);
+  newPage = newPage > pagesCount ? pagesCount : newPage;
   
   const moreButton = $(".js-more-button");
-  page === pagesCount ? moreButton.addClass("d-none") : moreButton.removeClass("d-none");
-  
-  setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts);
+  newPage === pagesCount ? moreButton.addClass("d-none") : moreButton.removeClass("d-none");
+  setUsersAndPagination(users, newPage, users.length, usersOnPage);
+  return newPage;
 }
 
 export default changeUsersOnPage;

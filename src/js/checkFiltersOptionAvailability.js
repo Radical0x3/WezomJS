@@ -1,11 +1,11 @@
 import $ from "jquery";
 import compareUserToFilter from "./compareUserToFilter";
 
-function checkFiltersOptionAvailability() {
+function checkFiltersOptionAvailability(users) {
   const optionsGroup = [...$(".filters fieldset:not(:last-child)")];
+  let checkedUsers = [...users];
   
   for (let group of optionsGroup) {
-    let users = [...$(".js-user-card:not(.js-hidden-by-filter)")];
     let options = [...$(group).find("input:not(:checked)")];
     let optionsChecked = $(group).find("input:checked");
     let res = [];
@@ -17,11 +17,7 @@ function checkFiltersOptionAvailability() {
       let optValue = opt.val().split(",");
       let optTag = $(group).data("field");
       
-      let temp = users.filter(item => {
-        let nodeValue = $(item).find(`.js-user-${optTag}`).text();
-        
-        return compareUserToFilter(nodeValue, optValue);
-      });
+      let temp = checkedUsers.filter(user => compareUserToFilter(user[`${optTag}`], optValue));
       res = [...res, ...temp];
       
       if (temp.length === 0) {

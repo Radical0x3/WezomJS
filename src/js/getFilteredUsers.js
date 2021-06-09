@@ -4,20 +4,14 @@ import checkFailedResult from "./checkFailedResult";
 import compareUserToFilter from "./compareUserToFilter";
 import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
 
-function getFilteredUsers(opts) {
-  const initialUsers = [...$(".js-user-card")];
-  let filteredUsers = initialUsers;
+function getFilteredUsers(opts, users) {
+  let filteredUsers = [...users];
   let tempUsers = [];
   
   for (let [key, value] of Object.entries(opts)) {
     if (value.length > 0) {
       for (let arr of value) {
-        let res = filteredUsers.filter(item => {
-          let valueArr = arr.split(",");
-          let nodeValue = $(item).find(`.js-user-${key}`).text();
-          
-          return compareUserToFilter(nodeValue, valueArr);
-        });
+        let res = filteredUsers.filter(user => compareUserToFilter(user[`${key}`], arr.split(",")));
         tempUsers = [...tempUsers, ...res];
       }
       filteredUsers = tempUsers;
@@ -25,13 +19,8 @@ function getFilteredUsers(opts) {
     }
   }
   
-  for (let user of initialUsers) {
-    filteredUsers.includes(user) ? $(user).removeClass("d-none js-hidden-by-filter") : $(user).addClass("d-none" +
-      " js-hidden-by-filter");
-  }
-  
-  checkFiltersOptionAvailability();
-  checkFailedResult();
+  checkFiltersOptionAvailability(filteredUsers);
+  checkFailedResult(filteredUsers);
   
   return filteredUsers;
 }
