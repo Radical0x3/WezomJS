@@ -8,7 +8,11 @@ function getFiltersOptions(input, opts) {
   if (!input.checked) {
     filterOpts[key].splice(filterOpts[key].indexOf(value), 1);
   } else {
-    filterOpts.hasOwnProperty(key) ? filterOpts[key].push(value) : filterOpts[key] = [value];
+    if (filterOpts.hasOwnProperty(key)) {
+      !filterOpts[key].includes(value) ? filterOpts[key].push(value) : null;
+    } else {
+      filterOpts[key] = [value];
+    }
   }
   
   return filterOpts;

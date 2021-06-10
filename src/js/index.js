@@ -3,9 +3,9 @@ import "regenerator-runtime/runtime";
 import $ from "jquery";
 import "select2/dist/js/select2.min";
 
-import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
 import changePagination from "./changePagination";
 import changeUsersOnPage from "./changeUsersOnPage";
+import checkFiltersOptionAvailability from "./checkFiltersOptionAvailability";
 import createPagination from "./createPagination";
 import disableSelectGroup from "./disableSelectGroup";
 import enableAllSelectGroup from "./enableAllSelectGroup";
@@ -71,6 +71,7 @@ $(document).ready(function () {
       filteredUsers = data;
       foundUsers = data;
       sortedUsers = data;
+      console.log("BEFORE OPTS: ", filterOpts);
     }).then(() => {
       Object.entries(filterOpts).length > 0 ? filteredUsers = getFilteredUsers(filterOpts, defaultUsers) : null;
       foundUsers = [...filteredUsers];

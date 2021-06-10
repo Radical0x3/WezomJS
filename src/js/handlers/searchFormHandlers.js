@@ -1,6 +1,5 @@
 import $ from "jquery";
 
-import checkFailedResult from "../checkFailedResult";
 import fillUsersOperatorSelect from "../fillUsersOperatorSelect";
 import getNewStatistics from "../getNewStatistics";
 import getUsersData from "../getUsersData";

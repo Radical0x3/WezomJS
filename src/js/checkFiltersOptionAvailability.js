@@ -1,4 +1,5 @@
 import $ from "jquery";
+
 import compareUserToFilter from "./compareUserToFilter";
 
 function checkFiltersOptionAvailability(users) {
