@@ -4,7 +4,7 @@ import compareUserToFilter from "./compareUserToFilter";
 function getFilteredUsers(opts, users) {
   let filteredUsers = [...users];
   let tempUsers = [];
-  console.log("OPTS: ", opts);
+
   for (let [key, value] of Object.entries(opts)) {
     if (value.length > 0) {
       for (let arr of value) {
