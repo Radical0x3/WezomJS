@@ -71,7 +71,6 @@ $(document).ready(function () {
       filteredUsers = data;
       foundUsers = data;
       sortedUsers = data;
-      console.log("BEFORE OPTS: ", filterOpts);
     }).then(() => {
       Object.entries(filterOpts).length > 0 ? filteredUsers = getFilteredUsers(filterOpts, defaultUsers) : null;
       foundUsers = [...filteredUsers];
