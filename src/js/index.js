@@ -20,18 +20,18 @@ import getUsersData from "./getUsersData";
 import moveFiltersNode from "./moveFiltersNode";
 import {openPopup} from "./popup";
 import {operatorsSelectHandlerForSelect, operatorsSelectHandlerForUnselect} from "./handlers/operatorsSelectHandlers";
+import rebuildPagination from "./rebuildPagination";
 import removeSearchFailedMessage from "./removeSearchFailedMessage";
 import resetSortOptionsOrder from "./resetSortOptionsOrder";
-import resetUsersFilters from "./resetUsersFilters";
 import {searchFormHandlerForReset, searchFormHandlerForSearch} from "./handlers/searchFormHandlers";
 import setUsersFilters from "./setUsersFilters";
+import sortSelectHandler from "./handlers/sortSelectHandler";
 import sortUsers from "./sortUsers";
 import usersSearch from "./usersSearch";
 
 import "./registerHandebarsParts";
 import "../scss/style.scss";
-import rebuildPagination from "./rebuildPagination";
-import checkFailedResult from "./checkFailedResult";
+
 
 // HTML HOT MODULE REPLACEMENT WHEN IT'S DEVELOPMENT MODE <--------------------
 if (process.env.NODE_ENV === "development") {
@@ -45,6 +45,7 @@ $(document).ready(function () {
   let usersOnPage = 0;
   let pagesCount = 0;
   let page = 1;
+  let fromPage = 1;
   
   let defaultUsers = [];
   let filteredUsers = [];
@@ -96,27 +97,29 @@ $(document).ready(function () {
       .then(() => {
         $(".js-search-input").val(null);
         $(".js-statistics").removeClass("d-none");
+        const loadMore = $(".js-more-button");
+        usersCount > usersOnPage ? loadMore.removeClass("d-none") : loadMore.addClass("d-none");
         fillUsersOperatorSelect(sortedUsers);
       })
       .then(() => {
         // FILTERS FORM HANDLERS <--------------------
         const filtersForm = $(".js-filters-form");
-        filtersForm.on("click", function (e) { // +
+        filtersForm.on("click", function (e) {
           const targetInput = e.target.closest("input");
           
           if (targetInput) {
             filterOpts = getFiltersOptions(targetInput, filterOpts);
             filteredUsers = getFilteredUsers(filterOpts, defaultUsers);
-            fillUsersOperatorSelect(filteredUsers);
             
             foundUsers = usersSearch(filteredUsers, usersOnPage);
             sortedUsers = sortUsers(foundUsers);
             getUsersData(sortedUsers, page, usersOnPage);
             getNewStatistics(sortedUsers, page, usersOnPage);
+            fillUsersOperatorSelect(sortedUsers);
             rebuildPagination(sortedUsers, page);
           }
         });
-        filtersForm.on("reset", function () { // +-
+        filtersForm.on("reset", function () {
           filteredUsers = [...defaultUsers];
           foundUsers = usersSearch(filteredUsers, usersOnPage);
           sortedUsers = sortUsers(foundUsers);
@@ -132,54 +135,52 @@ $(document).ready(function () {
         
         // OPERATORS SELECT HANDLERS <--------------------
         const operatorsSelect = $(".js-operators-select");
-        operatorsSelect.on("select2:select", (event) => operatorsSelectHandlerForSelect(event, filterOpts));
-        operatorsSelect.on("select2:unselect", (event) => operatorsSelectHandlerForUnselect(event, filterOpts));
+        operatorsSelect.on("select2:select", (event) => {
+          filteredUsers = operatorsSelectHandlerForSelect(event, sortedUsers, page, usersOnPage, filterOpts);
+        });
+        operatorsSelect.on("select2:unselect", (event) => {
+          filteredUsers = operatorsSelectHandlerForUnselect(event, sortedUsers, page, usersOnPage, filterOpts);
+        });
         
         // PAGINATION HANDLERS <--------------------
         $(".js-pagination-col").on("click", (event) => {
-          changePagination(event, pagesCount, usersCount, usersOnPage, seed, filterOpts)
-            .then(data => defaultUsers = data);
+          changePagination(event, sortedUsers, pagesCount, usersCount, usersOnPage, filterOpts);
+          fromPage = +$(".js-pagination-item.active").eq(0).data("pageId");
         });
       });
   });
   
   $(".js-more-button").on("click", () => {
-    getMoreUsers(filteredUsers, pagesCount, usersCount, usersOnPage, filterOpts)
-      .then((data) => defaultUsers = data);
+    getMoreUsers(sortedUsers, fromPage, pagesCount, usersCount, usersOnPage);
   });
   
   $(window).on("resize", moveFiltersNode);
   
   // SEARCH SELECT HANDLERS <--------------------
-  searchSelect.on("select2:select", () => { // +
+  searchSelect.on("select2:select", () => {
     foundUsers = searchFormHandlerForSearch(sortedUsers, page, usersOnPage);
+    sortedUsers = [...foundUsers];
   });
-  sortSelect.on("select2:selecting", (event) => disableSelectGroup(event, this, true)); // !
-  sortSelect.on("select2:select", function (event) { // +
+  sortSelect.on("select2:selecting", (event) => disableSelectGroup(event, this, true));
+  sortSelect.on("select2:select", function (event) {
     const element = $(event.params.data.element);
     element.detach();
     $(this).append(element);
     $(this).trigger("change");
     
-    sortedUsers = sortUsers(foundUsers);
-    getUsersData(sortedUsers, page, usersOnPage);
-    getNewStatistics(sortedUsers, page, usersOnPage);
+    [foundUsers, sortedUsers] = sortSelectHandler(filteredUsers, sortedUsers, page, usersOnPage);
   });
-  sortSelect.on("select2:unselecting", (event) => disableSelectGroup(event, this, false)); // !
-  sortSelect.on("select2:unselect", function (event) { // +
+  sortSelect.on("select2:unselecting", (event) => disableSelectGroup(event, this, false));
+  sortSelect.on("select2:unselect", function (event) {
     resetSortOptionsOrder(event, this);
-    const target = $(event.target).select2("data");
-    
-    target.length > 0 ? sortedUsers = sortUsers(foundUsers) : sortedUsers = [...filteredUsers];
-    getUsersData(sortedUsers, page, usersOnPage);
-    getNewStatistics(sortedUsers, page, usersOnPage);
+    [foundUsers, sortedUsers] = sortSelectHandler(filteredUsers, sortedUsers, page, usersOnPage);
   });
   sortSelect.on("change", function (event) {
     event.ok ? enableAllSelectGroup(sortSelect) : null;
   });
 
 // USERS TO SHOW SELECT HANDLERS <--------------------
-  usersToShowSelect.on("change", function (event) { // +
+  usersToShowSelect.on("change", function (event) {
     let prevUsersOnPage = usersOnPage;
     usersOnPage = isNaN(+event.target.value) ? usersCount : +event.target.value;
     pagesCount = Math.ceil(usersCount / usersOnPage);
@@ -188,15 +189,16 @@ $(document).ready(function () {
 
 // SEARCH FORM HANDLERS <--------------------
   const searchForm = $(".js-search-form");
-  searchForm.on("keyup", () => { // +
-    foundUsers = searchFormHandlerForSearch(sortedUsers, page, usersOnPage);
+  searchForm.on("keyup", () => {
+    [foundUsers, sortedUsers] = searchFormHandlerForSearch(filteredUsers, page, usersOnPage);
   });
-  searchForm.on("search", () => { // +
+  searchForm.on("search", () => {
     searchFormHandlerForReset(sortedUsers, page, usersOnPage);
   });
-  searchForm.on("reset", () => { // +
+  searchForm.on("reset", () => {
     foundUsers = [...filteredUsers];
-    searchFormHandlerForReset(foundUsers, page, usersOnPage);
+    sortedUsers = [...foundUsers];
+    searchFormHandlerForReset(sortedUsers, page, usersOnPage);
     sortSelect.val(null).trigger({
       type: "change",
       ok: true,

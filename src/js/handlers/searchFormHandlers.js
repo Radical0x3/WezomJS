@@ -1,11 +1,14 @@
+import $ from "jquery";
+
+import checkFailedResult from "../checkFailedResult";
 import fillUsersOperatorSelect from "../fillUsersOperatorSelect";
 import getNewStatistics from "../getNewStatistics";
 import getUsersData from "../getUsersData";
-import removeSearchFailedMessage from "../removeSearchFailedMessage";
-
-import $ from "jquery";
 import rebuildPagination from "../rebuildPagination";
+import removeSearchFailedMessage from "../removeSearchFailedMessage";
+import sortUsers from "../sortUsers";
 import usersSearch from "../usersSearch";
+
 
 function searchFormHandlerForReset(users, page, usersOnPage) {
   getUsersData(users, page, usersOnPage);
@@ -23,13 +26,18 @@ function searchFormHandlerForReset(users, page, usersOnPage) {
 }
 
 function searchFormHandlerForSearch(users, page, usersOnPage) {
-  let foundUsers = usersSearch(users, usersOnPage);
-  fillUsersOperatorSelect(foundUsers);
-  getUsersData(foundUsers, page, usersOnPage);
-  getNewStatistics(foundUsers, page, usersOnPage);
-  rebuildPagination(foundUsers);
+  let newFoundUsers = usersSearch(users, usersOnPage);
+  let newSortedUsers = [];
+  $(".js-sort-select").select2("data").length > 0 ? newSortedUsers = sortUsers(newFoundUsers) : newSortedUsers = [...newFoundUsers];
+  fillUsersOperatorSelect(newSortedUsers);
+  getUsersData(newSortedUsers, page, usersOnPage);
+  getNewStatistics(newSortedUsers, page, usersOnPage);
+  rebuildPagination(newSortedUsers);
   
-  return foundUsers;
+  const loadMore = $(".js-more-button");
+  newSortedUsers.length > usersOnPage ? loadMore.removeClass("d-none") : loadMore.addClass("d-none");
+  
+  return [newFoundUsers, newSortedUsers];
 }
 
 export {

@@ -2,7 +2,7 @@ import $ from "jquery";
 
 import setUsersAndPagination from "./setUsersAndPagination";
 
-function changePagination(event, pagesCount, usersCount, usersOnPage, seed, filterOpts) {
+function changePagination(event, users, pagesCount, usersCount, usersOnPage, filterOpts) {
   const targetItem = event.target.closest(".js-pagination-item");
   const activeItems = $(".js-pagination-item.active");
   const targetArrow = event.target.closest(".js-pagination-arrow:not(.pagination__arrow--disabled)");
@@ -16,8 +16,7 @@ function changePagination(event, pagesCount, usersCount, usersOnPage, seed, filt
     const moreButton = $(".js-more-button");
     page === pagesCount ? moreButton.addClass("d-none") : moreButton.removeClass("d-none");
     
-    return setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts)
-      .then(data => data);
+    setUsersAndPagination(users, page, usersCount, usersOnPage);
   }
   
   if (targetArrow) {
@@ -44,8 +43,7 @@ function changePagination(event, pagesCount, usersCount, usersOnPage, seed, filt
     const moreButton = $(".js-more-button");
     page === pagesCount ? moreButton.addClass("d-none") : moreButton.removeClass("d-none");
     
-    return setUsersAndPagination(page, pagesCount, usersCount, usersOnPage, seed, filterOpts)
-      .then(data => data);
+    setUsersAndPagination(users, page, usersCount, usersOnPage);
   }
 }
 

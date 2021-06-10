@@ -16,7 +16,6 @@ function createPagination(id, max, activePages = []) {
   }
   
   setPagination(opts);
-  return end;
 }
 
 export default createPagination;

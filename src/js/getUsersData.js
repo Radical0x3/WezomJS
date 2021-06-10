@@ -1,16 +1,13 @@
 import $ from "jquery";
 import Handlebars from "handlebars/dist/handlebars.min";
 
+import hideButtons from "./hideButtons";
+import showButtons from "./showButtons";
+
 function getUsersData(users, page, usersOnPage, append = false) {
   let neededUsers = page === 1 ? users.slice(0, usersOnPage) : users.slice((page - 1) * usersOnPage, page * usersOnPage);
-  const body = $("body");
-  const button = $(".js-load-button");
-  const moreButton = $(".js-more-button");
   let result = "";
-  
-  button.addClass("button--hiding");
-  moreButton.addClass("button--hiding");
-  body.addClass("loading");
+  hideButtons();
   
   for (let user of neededUsers) {
     result += Handlebars.partials["User"](user);
@@ -35,10 +32,7 @@ function getUsersData(users, page, usersOnPage, append = false) {
     $(".js-actions-row").before(wrapper);
   }
   
-  button.removeClass("button--hiding");
-  moreButton.removeClass("button--hiding");
-  body.removeClass("loading");
-  moreButton.parent().removeClass("d-none");
+  showButtons();
 }
 
 export default getUsersData;
